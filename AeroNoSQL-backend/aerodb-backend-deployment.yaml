@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: aerodb-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: aerodb-backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: aerodb-backend
+    spec:
+      containers:
+      - image: daanrsantiago/aerodb-backend:v1
+        imagePullPolicy: IfNotPresent
+        name: aerodb-backend-container
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP

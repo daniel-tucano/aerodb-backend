@@ -47,7 +47,7 @@ pipeline {
 
     stage('Atualiza pods na kubernetes') {
         steps {
-            sh "kubectl set image deployment/aerodb-backend  aerodb-backend-container=daanrsantiago/aerodb-backend:${env.BUILD_NUMBER}"
+            sh "kubectl set image deployments/aerodb-backend  aerodb-backend-container=daanrsantiago/aerodb-backend:${env.BUILD_NUMBER}"
         }
     }
   }

@@ -25,7 +25,7 @@ pipeline {
         // nenhum framework de testes atualmente, então apenas utilizaremos um echo 'testes passaram com sucesso'
         steps {
             script {
-                app.inside {
+                docker.image('daanrsantiago/aerodb-backend').inside {
                     sh "echo 'Testes passaram com sucesso'"
                 }
             }
@@ -36,6 +36,7 @@ pipeline {
 
         steps {
             script {
+                def app = docker.image('daanrsantiago/aerodb-backend')
                 docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                     app.push("${env.BUILD_NUMBER}")
                     app.push("latest")

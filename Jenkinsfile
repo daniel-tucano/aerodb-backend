@@ -12,8 +12,10 @@ pipeline {
 
     stage('Constroi a imagem de docker') {
         steps {
-            script {
-                def app = docker.build('daanrsantiago/aerodb-backend')
+            dir(path: './AeroNoSQLDB')  {
+                script {
+                    def app = docker.build('daanrsantiago/aerodb-backend')
+                }
             }
         }
     }

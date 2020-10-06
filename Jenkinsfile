@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Instala dependencias') {
       steps {
-        dir(path: './AeroNoSQLDB') {
+        dir(path: './AeroNoSQL-backend') {
           sh 'npm install'
         }
 
@@ -12,7 +12,7 @@ pipeline {
 
     stage('Constroi a imagem de docker') {
         steps {
-            dir(path: './AeroNoSQLDB')  {
+            dir(path: './AeroNoSQL-backend')  {
                 script {
                     def app = docker.build('daanrsantiago/aerodb-backend')
                 }

@@ -9,19 +9,24 @@ pipeline {
 
       }
     }
-    
+
     stage('Constroi a imagem de docker') {
         steps {
-            app = docker.build('daanrsantiago/aerodb-backend')
+            script {
+                def app = docker.build('daanrsantiago/aerodb-backend')
+            }
         }
     }
 
     stage('Realiza os teste unitários') {
         // Idealmente aqui seriam realizados testes, mas este respositório não esta usando
         // nenhum framework de testes atualmente, então apenas utilizaremos um echo 'testes passaram com sucesso'
-
-        app.inside {
-            sh "echo 'Testes passaram com sucesso'"
+        steps {
+            script {
+                app.inside {
+                    sh "echo 'Testes passaram com sucesso'"
+                }
+            }
         }
     }
 

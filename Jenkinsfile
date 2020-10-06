@@ -10,6 +10,12 @@ pipeline {
       }
     }
 
+    stage('Adiciona permissão do docker para o Jenkins') {
+        steps {
+            sh "sudo chown root:jenkins /run/docker.sock"
+        }
+    }
+
     stage('Constroi a imagem de docker') {
         steps {
             dir(path: './AeroNoSQL-backend')  {

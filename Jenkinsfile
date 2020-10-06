@@ -1,7 +1,11 @@
 pipeline {
   agent any
   stages {
+<<<<<<< HEAD
     stage('Instala dependencias') {
+=======
+    stage('Build') {
+>>>>>>> c41e1d460fa1b434f15d6d2565a3f07da7c7218d
       steps {
         dir(path: './AeroNoSQLDB') {
           sh 'npm install'
@@ -10,6 +14,7 @@ pipeline {
       }
     }
 
+<<<<<<< HEAD
     stage('Constroi a imagem de docker') {
         steps {
             app = docker.build('daanrsantiago/aerodb-backend')
@@ -36,5 +41,7 @@ pipeline {
     stage('Atualiza pods na kubernetes') {
         sh "kubectl set image deployment/aerodb-backend  aerodb-backend-container=daanrsantiago/aerodb-backend:${env.BUILD_NUMBER}"
     }
+=======
+>>>>>>> c41e1d460fa1b434f15d6d2565a3f07da7c7218d
   }
 }

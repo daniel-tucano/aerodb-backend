@@ -2,7 +2,6 @@ pipeline {
   agent any
   stages {
     stage('Instala dependencias') {
-    stage('Build') {
       steps {
         dir(path: './AeroNoSQLDB') {
           sh 'npm install'
@@ -10,6 +9,7 @@ pipeline {
 
       }
     }
+    
     stage('Constroi a imagem de docker') {
         steps {
             app = docker.build('daanrsantiago/aerodb-backend')

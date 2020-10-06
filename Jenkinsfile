@@ -32,14 +32,20 @@ pipeline {
 
     stage('Da um Push na imagem para o Docker Hub') {
 
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+        steps {
+            script {
+                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                    app.push("${env.BUILD_NUMBER}")
+                    app.push("latest")
+                }
+            }
         }
     }
 
     stage('Atualiza pods na kubernetes') {
-        sh "kubectl set image deployment/aerodb-backend  aerodb-backend-container=daanrsantiago/aerodb-backend:${env.BUILD_NUMBER}"
+        steps {
+            sh "kubectl set image deployment/aerodb-backend  aerodb-backend-container=daanrsantiago/aerodb-backend:${env.BUILD_NUMBER}"
+        }
     }
   }
 }

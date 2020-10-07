@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(cors())
 
 // Iniciando Banco de dados
-mongoose.connect('mongodb+srv:://mongodb/aerodb?readPreference=secondaryPreferred', 
+mongoose.connect('mongodb+srv://mongodb.default.svc.cluster.local/aerodb?readPreference=secondaryPreferred', 
 {useNewUrlParser: true, useUnifiedTopology: true, user: process.env.MONGODB_USER, pass: process.env.MONGODB_PASSWORD}).then( () => {
     console.log('Conexão com o mongoose deu certo')
 }).catch(() => {

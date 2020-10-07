@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(cors())
 
 // Iniciando Banco de dados
-mongoose.connect('mongodb://mongodb-0.mongodb,mongodb-1.mongodb,mongodb-2.mongodb/aerodb?readPreference=secondaryPreferred', 
+mongoose.connect('mongodb+srv:://mongodb/aerodb?readPreference=secondaryPreferred', 
 {useNewUrlParser: true, useUnifiedTopology: true}).then( () => {
     console.log('Conexão com o mongoose deu certo')
 }).catch(() => {
@@ -30,4 +30,4 @@ requireDir('./src/models')
 // Rotas
 app.use('/', require('./src/routes'))
 
-app.listen(80)
+app.listen(8081)

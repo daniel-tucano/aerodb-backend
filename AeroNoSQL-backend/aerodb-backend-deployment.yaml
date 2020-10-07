@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: aerodb-backend
   labels:
     name: aerodb-backend
 spec:
@@ -19,10 +20,21 @@ spec:
         name: aerodb-backend
     spec:
       containers:
-      - image: daanrsantiago/aerodb-backend:v1
+      - image: daanrsantiago/aerodb-backend:latest
         imagePullPolicy: IfNotPresent
         name: aerodb-backend-container
         ports:
         - containerPort: 80
           name: http
           protocol: TCP
+        env:
+          - name: MONGODB_USER
+            valueFrom:
+              secretKeyRef:
+                name: segredo-mongodb
+                key: username
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: segredo-mongodb
+                key: password

@@ -10,8 +10,8 @@ app.use(express.json())
 app.use(cors())
 
 // Iniciando Banco de dados
-mongoose.connect('mongodb+srv://mongodb.default.svc.cluster.local/aerodb?ssl=false&replicaSet=rs0&readPreference=secondaryPreferred', 
-{useNewUrlParser: true, useUnifiedTopology: true, user: process.env.MONGODB_USER, pass: process.env.MONGODB_PASSWORD}).then( () => {
+mongoose.connect('mongodb+srv://mongodb.default.svc.cluster.local/aerodb?ssl=false&replicaSet=rs0&readPreference=secondaryPreferred&authSource=admin', 
+{useNewUrlParser: true, useUnifiedTopology: true, auth: {user: process.env.MONGODB_USER, password: process.env.MONGODB_PASSWORD}}).then( () => {
     console.log('Conexão com o mongoose deu certo')
 }).catch((erro) => {
     console.log('conexão com mongoose falhou')

@@ -1,3 +1,6 @@
 /Database/dump
+/Database/migracao/node_modules
+/Database/migracao/teste_mongoose.js
+/Database/migracao/.env
 /AeroNoSQL-backend/node_modules
 /Database/mongodb-secrets.yaml

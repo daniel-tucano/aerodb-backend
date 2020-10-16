@@ -1,45 +1,133 @@
-apiVersion: v1
-items:
-- apiVersion: apps/v1
-  kind: StatefulSet
-  metadata:
-    name: mongodb
-  spec:
-    replicas: 3
-    selector:
-      matchLabels:
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mongodb
+  serviceName: mongodb
+  template:
+    metadata:
+      labels:
         app: mongodb
-    serviceName: mongodb
-    template:
-      metadata:
-        labels:
-          app: mongodb
-      spec:
-        containers:
-        - command:
-          - mongod
-          - --bind_ip_all
-          - --replSet
-          - rs0
+    spec:
+      containers:
+        - name: mongodb
           image: mongo
-          name: mongodb
+          command:
+            - /bin/bash
+            - -c
+            - >
+              if [ -f /data/db/admin-user.lock ]; then
+                echo "KUBERNETES LOG $HOSTNAME- Starting Mongo Daemon with runtime settings (clusterAuthMode)"
+                #ensure wiredTigerCacheSize is set within the size of the containers memory limit
+                if [ "$HOSTNAME" = "mongodb-0" ]; then
+                  if [ ! -f /data/db/replica-set-configurated.lock ]; then
+                    echo "KUBERNETES LOG $HOSTNAME- Configuring cluster on mongodb-0"
+                    mongod --replSet rs0 --bind_ip 0.0.0.0 --keyFile /data/db/keyfile.yaml;
+                  else
+                    mongod --replSet rs0 --bind_ip 0.0.0.0 --auth --keyFile /data/db/keyfile.yaml;
+                  fi;
+                else
+                  mongod --replSet rs0 --bind_ip 0.0.0.0 --auth --keyFile /data/db/keyfile.yaml;
+                fi;
+              else
+                echo "KUBERNETES LOG $HOSTNAME- Starting Mongo Daemon with setup setting (authMode)"
+                mongod;
+              fi;
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/bash
+                  - -c
+                  - >
+                    if [ -f /data/db/admin-user.lock ]; then
+                      if [ ! -f /data/db/replica-set-configurated.lock ]; then
+                        if [ "$HOSTNAME" = "mongodb-0" ]; then
+                          #Cria o arquivo na memoria para recordar que ja passou por essa condicional
+                            touch /data/db/replica-set-configurated.lock
+                            #Dando update no apt e adicionando o pacote host
+                            apt update
+                            apt -y install host
+                            #Loop que identifica se ainda esta em fase de criação dos pods
+                            nohup /bin/bash -c "
+                            #Iniciando variaveis que participarão do loop
+                            n_ips_antes=\$(host mongodb | egrep -c \"([0-9]{1,3}[\\.]){3}[0-9]{1,3}\")
+                            n_ips_depois=10
+                            echo \"inicio do loop\"
+                            while [ \$n_ips_antes != \$n_ips_depois ]
+                              do
+                                n_ips_antes=\$n_ips_depois
+                                echo \"dormindo por 35 segunds\" >> /data/db/replicaSet.log
+                                sleep 35
+                                n_ips_depois=\$(host mongodb | egrep -c \"([0-9]{1,3}[\\.]){3}[0-9]{1,3}\")
+                                echo \"achados \${n_ips_depois}\"
+                            done;
+                            #Como os indices começam em zero temos que fazer essa conta
+                            n_ultimo_pod=\$(expr \$n_ips_depois - 1)
+                            stringToEval=\$'rs.initiate( {\n  _id : \"rs0\",\n  members: ['
+                            for numero in \$(seq 0 1 \${n_ultimo_pod})
+                              do
+                                stringToEval+=\$(printf \"\n    { _id: \${numero}, host: 'mongodb-\${numero}.mongodb:27017' },\")
+                            done
+                            stringToEval+=\$'\n   ]\n})'
+                            echo \"\$stringToEval\" >> /data/db/replicaSet.log
+                            #Finalmente fazemos esse comando
+                            mongo -u \"\${MONGO_INITDB_ROOT_USERNAME}\" -p \"\${MONGO_INITDB_ROOT_PASSWORD}\" --authenticationDatabase \"admin\" --eval \"\${stringToEval}\" >> /data/db/replicaSet.log
+                            mongod --shutdown;" &>/dev/null &
+                        fi;
+                      fi;
+                    fi;
+
+                    if [ ! -f /data/db/admin-user.lock ]; then
+                      echo "KUBERNETES LOG $HOSTNAME- no Admin-user.lock file found yet"
+                      echo "KUBERNETES LOG $HOSTNAME- creating keyfile"
+                      echo $KEYFILE_CONTENT >> /data/db/keyfile.yaml
+                      chmod 400 /data/db/keyfile.yaml
+                      #replaced simple sleep, with ping and test.
+                      while (! mongo --eval "db.adminCommand('ping')"); do sleep 10; echo "KUBERNETES LOG $HOSTNAME - waiting another 10 seconds for mongo to start" >> /data/db/configlog.txt; done;
+                      touch /data/db/admin-user.lock
+                      if [ "$HOSTNAME" = "mongodb-0" ]; then
+                        echo "KUBERNETES LOG $HOSTNAME- creating admin user ${MONGO_INITDB_ROOT_USERNAME}"
+                        echo "db.createUser({ user: '${MONGO_INITDB_ROOT_USERNAME}', pwd: '${MONGO_INITDB_ROOT_PASSWORD}', roles: [{ role: \"root\", db: \"admin\" }]});" >> /data/db/config.log
+                        mongo --eval "db.createUser({ user: '${MONGO_INITDB_ROOT_USERNAME}', pwd: '${MONGO_INITDB_ROOT_PASSWORD}', roles: [{ role: \"root\", db: \"admin\" }]});" mongodb://localhost/admin >> /data/db/config.log
+                      fi;
+                      echo "KUBERNETES LOG $HOSTNAME-shutting mongod down for final restart"
+                      mongod --shutdown;
+                    fi;
           ports:
-          - containerPort: 27017
-            protocol: TCP
+            - containerPort: 27017
+              protocol: TCP
           volumeMounts:
-          - mountPath: /data/db
-            name: mongo-volume
-        terminationGracePeriodSeconds: 10
-    volumeClaimTemplates:
-    - apiVersion: v1
-      kind: PersistentVolumeClaim
+            - mountPath: /data/db
+              name: mongo-data-volume
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: segredo-mongodb
+                  key: username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: segredo-mongodb
+                  key: password
+            - name: KEYFILE_CONTENT
+              valueFrom:
+                secretKeyRef:
+                  name: segredo-mongodb
+                  key: keyfileContent
+      terminationGracePeriodSeconds: 10
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
       metadata:
-        name: mongo-volume
+        name: mongo-data-volume
       spec:
         accessModes:
-        - ReadWriteOnce
+          - ReadWriteOnce
         resources:
           requests:
             storage: 5Gi
-
-

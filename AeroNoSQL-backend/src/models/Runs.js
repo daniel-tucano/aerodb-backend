@@ -1,7 +1,15 @@
 const mongoose = require('mongoose')
 
 const RunsMongoSchema = new mongoose.Schema({
-    airfoilId: {
+    runID: {
+        type: Number,
+        required: true,
+    },
+    airfoilID: {
+        type: Number,
+        required: true,
+    },
+    airfoilObjID: {
         type: String,
         required: true,
     },
@@ -14,7 +22,7 @@ const RunsMongoSchema = new mongoose.Schema({
         required: true,
     },
     polar: {
-        alpha: {Number},
+        alpha: [Number],
         cl: [Number],
         cd: [Number],
         cm: [Number],

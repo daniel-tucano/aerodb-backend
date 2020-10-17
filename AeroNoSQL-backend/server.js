@@ -22,12 +22,6 @@ mongoose.plugin(mongose_paginate)
 
 requireDir('./src/models')
 
-// Airfoil = mongoose.model('Airfoil')
-
-// Airfoil.findOne().then( result => {
-//     console.log(result)
-// })
-
 // Rotas
 app.use('/', require('./src/routes'))
 

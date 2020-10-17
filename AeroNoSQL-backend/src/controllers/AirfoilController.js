@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const Airfoil = mongoose.model('Airfoil')
+const Counter = mongoose.model('Counter')
 
 module.exports = {
     async index(req, res) {
@@ -12,25 +13,29 @@ module.exports = {
     },
 
     async show(req,res) {
-        const airfoil = await Airfoil.findById(req.params.id)
+        const airfoil = await Airfoil.findOne({airfoilID: req.params.id})
 
         return res.json(airfoil)
     },
 
     async store(req, res) {
+        // Obténdo counter que será o novo ID do aerofólio
+        const AirfoilCounter = await Counter.findOneAndUpdate({refCollection: "Airfoils"}, {$inc: {counter: 1}}, {new: true, useFindAndModify: false})
+        // Adicionando a requisição
+        req.body.airfoilID = AirfoilCounter.counter
         const airfoil = await Airfoil.create(req.body);
 
         return res.json(airfoil);
     },
 
     async update(req,res) {
-        const airfoil = await Airfoil.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        const airfoil = await Airfoil.findOneAndUpdate({airfoilID: req.params.id}, req.body, {new:true})
 
         return res.json(airfoil)
     },
 
     async destroy(req,res) {
-        await Airfoil.findByIdAndRemove(req.params.id)
+        await Airfoil.findOneAndRemove({airfoilID: req.params.id})
 
         return res.send()
     }

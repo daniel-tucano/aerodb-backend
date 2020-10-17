@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const AirfoilsMongoSchema = new mongoose.Schema({
+    airfoilID: {
+        type: Number,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
@@ -11,9 +15,9 @@ const AirfoilsMongoSchema = new mongoose.Schema({
         lowercase: true,
     },
     geometrie: {
-        Side: [String],
-        X: [Number],
-        Y: [Number],
+        side: [String],
+        x: [Number],
+        y: [Number],
     },
     thickness: {
         type: Number,
@@ -43,8 +47,19 @@ const AirfoilsMongoSchema = new mongoose.Schema({
         userName: {
             type: String,
             required: true,
-        }
+        },
+        userId: String
     },
+    runs: {
+        runIDs: {
+            type: Array,
+            required: false
+        },
+        runObjIDs: {
+            type: Array,
+            required: false
+        }
+    }
 })
 
 mongoose.model('Airfoil',AirfoilsMongoSchema)

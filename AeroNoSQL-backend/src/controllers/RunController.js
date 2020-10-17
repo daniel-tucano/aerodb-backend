@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const Run = mongoose.model('Run')
+const Counter = mongoose.model('Counter')
 
 module.exports = {
     async index(req, res) {
@@ -12,25 +13,27 @@ module.exports = {
     },
 
     async show(req,res) {
-        const run = await Run.findById(req.params.id)
+        const run = await Run.findOne({runID: req.params.id})
 
         return res.json(run)
     },
 
     async store(req, res) {
+        const runCounter = await Counter.findOneAndUpdate({refCollection: "Runs"}, { $inc: {counter: 1}}, { new: true, useFindAndModify: false})
+        req.body.runID = runCounter.counter
         const run = await Run.create(req.body);
 
         return res.json(run);
     },
 
     async update(req,res) {
-        const run = await Run.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        const run = await Run.findOneAndUpdate({runID: req.params.id}, req.body, {new:true})
 
         return res.json(run)
     },
 
     async destroy(req,res) {
-        await Run.findByIdAndRemove(req.params.id)
+            await Run.findOneAndRemove({runID: req.params.id})
 
         return res.send()
     }

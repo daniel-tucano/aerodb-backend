@@ -15,9 +15,9 @@ const AirfoilsMongoSchema = new mongoose.Schema({
         lowercase: true,
     },
     geometrie: {
-        Side: [String],
-        X: [Number],
-        Y: [Number],
+        side: [String],
+        x: [Number],
+        y: [Number],
     },
     thickness: {
         type: Number,

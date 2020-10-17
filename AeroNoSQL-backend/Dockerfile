@@ -8,6 +8,14 @@ COPY package.json .
 
 RUN npm install
 
+RUN apt update
+
+RUN apt install -y python3-pip
+
+COPY pip-packages.txt .
+
+RUN pip install --requirement=pip-packages.txt
+
 COPY . .
 
 EXPOSE 80

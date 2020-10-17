@@ -14,7 +14,7 @@ RUN apt install -y python3-pip
 
 COPY pip-packages.txt .
 
-RUN pip install --requirement=pip-packages.txt
+RUN pip3 install --requirement=pip-packages.txt
 
 COPY . .
 

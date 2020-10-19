@@ -1,6 +1,7 @@
 const { exec } = require('child_process')
 const express = require('express')
 const routes = express.Router()
+const fs = require('fs')
 
 const AirfoilsController = require('./controllers/AirfoilController')
 const RunController = require('./controllers/RunController')
@@ -45,8 +46,21 @@ routes.get('/download/project', async (req, res) => {
     const python = exec(execString)
 
     python.stdout.on('data', (projectZipPath) => {
+        
         try {
-            res.download(projectZipPath.toString().trim())
+            res.download(projectZipPath.toString().trim(), (error) => {
+                if (error) {
+                    res.send('an error has ocurred')
+                }else {
+                    fs.unlink(projectZipPath.toString().trim(), (err) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            console.log('arquivo deletado com sucesso')
+                        }
+                    })
+                }
+            })
         } catch {
             res.send('an error has ocurred')
         }
@@ -57,6 +71,7 @@ routes.get('/download/project', async (req, res) => {
             res.send('an error has ocurred')
         }
     })
+
 })
 
 module.exports = routes

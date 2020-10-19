@@ -30,13 +30,15 @@ routes.put('/users/:id', UserController.update)
 routes.delete('/users/:id', UserController.destroy)
 
 // Rotas de download
+
+// Download de projeto
 routes.get('/download/project', async (req, res) => {
     function stringToBase64(str) {
         const buff = Buffer.from(str, 'utf8');
         return buff.toString('base64');
     }
 
-    execString = "python3 createProjectZip.py"
+    execString = "python3 ./src/createProjectZip.py"
 
     for(let keyValue of Object.entries(req.query)) {
         execString += ` ${stringToBase64(keyValue[0])}`
@@ -45,6 +47,8 @@ routes.get('/download/project', async (req, res) => {
 
     const python = exec(execString)
 
+    console.log(execString)
+    console.log(`executando script em python`)
     python.stdout.on('data', (projectZipPath) => {
         
         try {
@@ -52,6 +56,7 @@ routes.get('/download/project', async (req, res) => {
                 if (error) {
                     res.send('an error has ocurred')
                 }else {
+                    console.log(`script em python executado com sucesso`)
                     fs.unlink(projectZipPath.toString().trim(), (err) => {
                         if (err) {
                             console.log(err)
@@ -62,6 +67,56 @@ routes.get('/download/project', async (req, res) => {
                 }
             })
         } catch {
+            res.send('an error has ocurred')
+        }
+    })
+    
+    python.on('exit', (code) => {
+        if (code === 1) {
+            res.send('an error has ocurred')
+        }
+    })
+
+})
+
+// Download de arquivo de aerofolio .mat
+routes.get('/download/airfoilMatFile', async (req, res) => {
+    function stringToBase64(str) {
+        const buff = Buffer.from(str, 'utf8');
+        return buff.toString('base64');
+    }
+
+    execString = "python3 ./src/airfoilMatFileDownload.py"
+
+    for(let keyValue of Object.entries(req.query)) {
+        execString += ` ${stringToBase64(keyValue[0])}`
+        execString += ` ${stringToBase64(keyValue[1])}`
+    }
+
+    const python = exec(execString)
+
+    console.log(execString)
+    console.log(`executando script em python`)
+    python.stdout.on('data', (airfoilMatFilePath) => {
+        
+        try {
+            console.log(airfoilMatFilePath)
+            res.download(airfoilMatFilePath.toString().trim(), (error) => {
+                if (error) {
+                    res.send(airfoilMatFilePath.toString().trim())
+                }else {
+                    console.log(`script em python executado com sucesso`)
+                    fs.unlink(airfoilMatFilePath.toString().trim(), (err) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            console.log('arquivo deletado com sucesso')
+                        }
+                    })
+                }
+            })
+        } catch {
+            console.log(`ocorreu um erro ao enviar o arquivo ${airfoilMatFilePath} para download`)
             res.send('an error has ocurred')
         }
     })

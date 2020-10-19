@@ -5,4 +5,4 @@
 /AeroNoSQL-backend/node_modules
 /AeroNoSQL-backend/.env
 /Database/mongodb-secrets.yaml
-AeroNoSQL-backend/package-lock.json
+/AeroNoSQL-backend/package-lock.json

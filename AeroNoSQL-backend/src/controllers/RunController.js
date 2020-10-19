@@ -19,8 +19,12 @@ module.exports = {
     },
 
     async store(req, res) {
+        // Obténdo counter que será o novo ID do run
         const runCounter = await Counter.findOneAndUpdate({refCollection: "Runs"}, { $inc: {counter: 1}}, { new: true, useFindAndModify: false})
+        // Adicionando o runID a requisicao
         req.body.runID = runCounter.counter
+        // Adiciona data atual do servidor ao campo postedDate
+        req.body.postedDate = new Date
         const run = await Run.create(req.body);
 
         return res.json(run);

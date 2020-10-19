@@ -21,8 +21,10 @@ module.exports = {
     async store(req, res) {
         // Obténdo counter que será o novo ID do aerofólio
         const AirfoilCounter = await Counter.findOneAndUpdate({refCollection: "Airfoils"}, {$inc: {counter: 1}}, {new: true, useFindAndModify: false})
-        // Adicionando a requisição
+        // Adicionando o airfoilID a requisição
         req.body.airfoilID = AirfoilCounter.counter
+        // Adiciona data atual do servidor ao campo postedDate
+        req.body.postedDate = new Date
         const airfoil = await Airfoil.create(req.body);
 
         return res.json(airfoil);

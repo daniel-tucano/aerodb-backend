@@ -3,4 +3,6 @@
 /Database/migracao/teste_mongoose.js
 /Database/migracao/.env
 /AeroNoSQL-backend/node_modules
+/AeroNoSQL-backend/.env
 /Database/mongodb-secrets.yaml
+AeroNoSQL-backend/package-lock.json

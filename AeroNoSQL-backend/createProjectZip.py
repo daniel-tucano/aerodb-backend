@@ -5,7 +5,15 @@ import sys
 import base64
 import requests
 from re import sub
-from scipy.io import savemat
+
+# Load enviroment variables if not in production enviroment
+if ('NODE_ENV' in os.environ):
+    if (os.environ['NODE_ENV'] != 'production'):
+        from dotenv import load_dotenv
+        load_dotenv()
+else:
+    from dotenv import load_dotenv
+    load_dotenv()
 
 
 def camelCase(string):

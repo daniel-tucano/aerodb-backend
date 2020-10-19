@@ -38,3 +38,7 @@ spec:
               secretKeyRef:
                 name: segredo-mongodb
                 key: password
+          - name: NODE_ENV
+            value: production
+          - name: NODE_PORT
+            value: '80'

@@ -4,6 +4,10 @@ const mongose_paginate = require('mongoose-paginate-v2')
 const cors = require('cors')
 const requireDir = require('require-dir')
 
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
 // Iniciando App
 const app = express()
 app.use(express.json())
@@ -25,4 +29,4 @@ requireDir('./src/models')
 // Rotas
 app.use('/', require('./src/routes'))
 
-app.listen(80)
+app.listen(process.env.NODE_PORT)

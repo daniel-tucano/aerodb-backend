@@ -33,7 +33,7 @@ module.exports = {
     },
 
     async destroy(req,res) {
-            await Run.findOneAndRemove({runID: req.params.id})
+            await Run.findOneAndRemove({runID: req.params.id},{useFindAndModify: false})
 
         return res.send()
     }

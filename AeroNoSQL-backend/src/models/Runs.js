@@ -51,9 +51,9 @@ const RunsMongoSchema = new mongoose.Schema({
         name: String,
         userName: String,
     },
-    runDate: {
+    postedDate: {
         type: Date,
-        required: false,
+        required: true,
     },
 })
 

@@ -29,13 +29,13 @@ module.exports = {
     },
 
     async update(req,res) {
-        const airfoil = await Airfoil.findOneAndUpdate({airfoilID: req.params.id}, req.body, {new:true})
+        const airfoil = await Airfoil.findOneAndUpdate({airfoilID: req.params.id}, req.body, {new:true, useFindAndModify: false})
 
         return res.json(airfoil)
     },
 
     async destroy(req,res) {
-        await Airfoil.findOneAndRemove({airfoilID: req.params.id})
+        await Airfoil.findOneAndRemove({airfoilID: req.params.id},{useFindAndModify: false})
 
         return res.send()
     }

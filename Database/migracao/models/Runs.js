@@ -9,6 +9,10 @@ const RunsMongoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    airfoilObjID: {
+        type: String,
+        required: true,
+    },
     reynolds: {
         type: Number,
         required: true,
@@ -47,9 +51,9 @@ const RunsMongoSchema = new mongoose.Schema({
         name: String,
         userName: String,
     },
-    runDate: {
+    postedDate: {
         type: Date,
-        required: false,
+        required: true,
     },
 })
 

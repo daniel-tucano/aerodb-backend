@@ -14,6 +14,10 @@ const AirfoilsMongoSchema = new mongoose.Schema({
         required: true,
         lowercase: true,
     },
+    filename: {
+        type: String,
+        required: false,
+    },
     geometrie: {
         side: [String],
         x: [Number],
@@ -49,6 +53,10 @@ const AirfoilsMongoSchema = new mongoose.Schema({
             required: true,
         },
         userId: String
+    },
+    postedDate: {
+        type: Date,
+        required: true,
     },
     runs: {
         runIDs: {

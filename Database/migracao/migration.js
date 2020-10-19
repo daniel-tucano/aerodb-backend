@@ -22,7 +22,9 @@ const CounterModel = mongoose.model('Counter')
 // Conectando ao MySQL
 const sequelize = new Sequelize('aerodb', process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
     host: process.env.MYSQL_HOST,
-    dialect: 'mysql'
+    dialect: 'mysql',
+    username: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD
 });
 
 // Testando a conexão com o banco de dados
@@ -109,6 +111,7 @@ function insertInDatabase(inicio, i) {
                 camber: Airfoil.Camber,
                 xCamber: Airfoil.X_Camber,
                 source: Airfoil.Source,
+                postedDate: Date.now(),
                 creator: DanielCreatorData,
             })
 
@@ -139,7 +142,9 @@ function insertInDatabase(inicio, i) {
             // PRA CADA RUN FAZEMOS O SEGUINTE
             for ([RunIndex, Run] of Runs.entries()) {
 
-
+                let runAdditionalData = CSVtoPOJO(Run.AdditionalData)
+                runAdditionalData.nCrit = Run.Ncrit
+                
                 // PREENCHEMOS AS INFORMAÇÕES BASICAS DA RUN NO BANCO DE DADOS
                 let RunNoSQLData = new RunModel({
                     runID: Run.RunID,
@@ -149,8 +154,8 @@ function insertInDatabase(inicio, i) {
                     mach: Run.Mach,
                     source: Run.Source,
                     creator: DanielCreatorData,
-                    runDate: Run.RunDate,
-                    additionalData: CSVtoPOJO(Run.AdditionalData),
+                    postedDate: Run.RunDate,
+                    additionalData: runAdditionalData,
                 })
 
                 runIDs.push(Run.RunID)

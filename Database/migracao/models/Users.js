@@ -29,12 +29,16 @@ const UserMongoSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    about: {
+        type: String,
+        required: true
+    },
     projects: [{
         name: String,
-        id: String
+        projectId: String
     }],
     userAirfoils: [String],
-    favoriteAirfoil: [String],
+    favoriteAirfoils: [String],
     userID: Number,
 })
 

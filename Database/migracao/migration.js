@@ -23,8 +23,6 @@ const CounterModel = mongoose.model('Counter')
 const sequelize = new Sequelize('aerodb', process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
     host: process.env.MYSQL_HOST,
     dialect: 'mysql',
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD
 });
 
 // Testando a conexão com o banco de dados
@@ -43,8 +41,9 @@ const DanielUser = new UserModel({
     userName: "@danielTucano",
     email: "daanrsantiago@gmail.com",
     gender: "male",
-    yearOfBirth: Date(1999, 2, 8, 0, 0, 0, 0),
+    yearOfBirth: new Date(1999, 2, 8, 0, 0, 0, 0),
     institution: "UFU",
+    about: "",
     projects: [],
     userAirfoils: [],
     favoriteAirfoils: [],

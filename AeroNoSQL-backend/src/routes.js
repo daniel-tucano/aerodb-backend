@@ -4,6 +4,7 @@ const routes = express.Router()
 const fs = require('fs')
 
 const AirfoilsController = require('./controllers/AirfoilController')
+const ProjectController = require('./controllers/ProjectController')
 const RunController = require('./controllers/RunController')
 const UserController = require('./controllers/UserController')
 
@@ -28,6 +29,14 @@ routes.get('/users/:id', UserController.show)
 routes.post('/users', UserController.store)
 routes.put('/users/:id', UserController.update)
 routes.delete('/users/:id', UserController.destroy)
+
+// Project Routes
+routes.get('/projects', ProjectController.index)
+routes.get('/projects/:id', ProjectController.show)
+routes.post('/projects', ProjectController.store)
+routes.put('/projects/:id', ProjectController.update)
+routes.delete('/projects/:id', ProjectController.destroy)
+
 
 // Rotas de download
 

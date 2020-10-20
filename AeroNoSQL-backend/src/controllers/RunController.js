@@ -31,7 +31,7 @@ module.exports = {
     },
 
     async update(req,res) {
-        const run = await Run.findOneAndUpdate({runID: req.params.id}, req.body, {new:true})
+        const run = await Run.findOneAndUpdate({runID: req.params.id}, req.body, {new:true, useFindAndModify: false})
 
         return res.json(run)
     },

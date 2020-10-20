@@ -14,7 +14,7 @@ pipeline {
         steps {
             dir(path: './AeroNoSQL-backend')  {
                 script {
-                    def app = docker.build('daanrsantiago/aerodb-backend', '--no-cahce')
+                    def app = docker.build('daanrsantiago/aerodb-backend')
                 }
             }
         }

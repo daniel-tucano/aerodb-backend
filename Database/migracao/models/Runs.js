@@ -6,7 +6,7 @@ const RunsMongoSchema = new mongoose.Schema({
         required: true,
     },
     airfoilID: {
-        type: String,
+        type: Number,
         required: true,
     },
     airfoilObjID: {

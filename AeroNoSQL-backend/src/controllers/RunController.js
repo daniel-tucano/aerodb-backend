@@ -5,9 +5,13 @@ const Counter = mongoose.model('Counter')
 
 module.exports = {
     async index(req, res) {
-        const { page = 1 } = req.query;
-        const { limit = 10 } = req.query
-        const runs = await Run.paginate({}, {page, limit});
+        const { page = 1, limit = 10, airfoilID = 0 } = req.query
+        const query = {}
+        if (airfoilID) {
+            query.airfoilID = Number(airfoilID)
+        }
+        
+        const runs = await Run.paginate(query, {page, limit});
 
         return res.json(runs);
     },

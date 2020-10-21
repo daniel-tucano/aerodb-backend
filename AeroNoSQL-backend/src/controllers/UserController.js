@@ -12,7 +12,9 @@ module.exports = {
     },
 
     async show(req,res) {
-        const user = await User.findById(req.params.id)
+        const { uid = false } = req.query
+
+        const user = uid ? await User.findOne({ uid: req.params.id }) : await User.findById(req.params.id)
 
         return res.json(user)
     },

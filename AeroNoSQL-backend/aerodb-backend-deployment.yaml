@@ -42,3 +42,5 @@ spec:
             value: production
           - name: NODE_PORT
             value: '80'
+          - name: MONGODB_URI
+            value: mongodb+srv://mongodb.default.svc.cluster.local/aerodb?ssl=false&replicaSet=rs0&readPreference=secondaryPreferred&authSource=admin

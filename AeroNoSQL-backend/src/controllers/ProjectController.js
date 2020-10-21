@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const Project = mongoose.model('Project')
+const User = mongoose.model('User')
 
 module.exports = {
     async index(req, res) {
@@ -10,13 +11,19 @@ module.exports = {
     },
 
     async show(req, res) {
-        const project = Project.findOne(req.params.id)
+        const project = Project.findById(req.params.id)
 
         return res.json(project)
     },
 
     async store(req, res) {
         const project = await Project.create(req.body)
+
+        // Se adicionou o projeto com sucesso atualiza os projetos do User que criou
+        if (project) {
+            await User.findByIdAndUpdate(project.creator, {$addToSet: { projects: { name: project.name, projectID: project.id } }})
+        }
+
         return res.json(project)
     },
 

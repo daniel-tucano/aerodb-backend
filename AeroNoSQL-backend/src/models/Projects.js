@@ -10,7 +10,7 @@ const ProjectMongoSchema = new mongoose.Schema({
         required: true,
     },
     airfoils: [{
-        airfoilId: {
+        airfoilID: {
             type: Number,
             required: true,
         },
@@ -24,7 +24,7 @@ const ProjectMongoSchema = new mongoose.Schema({
             y: [Number],
         },
         runsData: [{
-            runId: {
+            runID: {
                 type: Number,
                 required: true,
             },

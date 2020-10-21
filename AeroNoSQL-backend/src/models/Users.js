@@ -35,7 +35,7 @@ const UserMongoSchema = new mongoose.Schema({
     },
     projects: [{
         name: String,
-        projectId: String
+        projectID: String
     }],
     userAirfoils: [String],
     favoriteAirfoils: [String],

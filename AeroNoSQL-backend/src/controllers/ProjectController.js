@@ -1,11 +1,14 @@
 const mongoose = require('mongoose')
+const breezeMongodb = require('breeze-mongodb')
 
 const Project = mongoose.model('Project')
 const User = mongoose.model('User')
 
 module.exports = {
     async index(req, res) {
-        const projects = Project.find()
+        const { page = 1, limit = 10} = req.query
+        const ODataMongoQuery = new breezeMongodb.MongoQuery(req.query)
+        const projects = await Project.paginate(ODataMongoQuery.filter, {page, limit})
         
         return res.json(projects)
     },

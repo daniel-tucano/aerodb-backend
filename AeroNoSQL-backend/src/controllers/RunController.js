@@ -1,17 +1,14 @@
 const mongoose = require('mongoose')
+const breezeMongodb = require('breeze-mongodb')
 
 const Run = mongoose.model('Run')
 const Counter = mongoose.model('Counter')
 
 module.exports = {
     async index(req, res) {
-        const { page = 1, limit = 10, airfoilID = 0 } = req.query
-        const query = {}
-        if (airfoilID) {
-            query.airfoilID = Number(airfoilID)
-        }
-        
-        const runs = await Run.paginate(query, {page, limit});
+        const { page = 1, limit = 10} = req.query
+        const ODataMongoQuery = new breezeMongodb.MongoQuery(req.query)
+        const runs = await Run.paginate(ODataMongoQuery.filter, {page, limit});
 
         return res.json(runs);
     },

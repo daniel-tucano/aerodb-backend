@@ -43,14 +43,19 @@ const DanielUser = new UserModel({
     gender: "male",
     yearOfBirth: new Date(1999, 2, 8, 0, 0, 0, 0),
     institution: "UFU",
-    about: "",
+    about: "Aeronautical engeneering student at Universidade Federal de Uberlândia, former member of tucano aerodesign competition team and creator of aero DB",
     projects: [],
     userAirfoils: [],
     favoriteAirfoils: [],
 })
 
 // Inserindo Usuário
-DanielUser.save()
+DanielUser.save().then(() => {
+    console.log('usuario Daniel adiconado')
+}).catch( error => {
+    console.log('Nao foi possivel adicionar o usuario Daniel')
+    console.log(error)
+})
 
 // Iniciando variavel que é campo comum entre documentos
 

@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const mongose_paginate = require('mongoose-paginate-v2')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const requireDir = require('require-dir')
 
 if (process.env.NODE_ENV !== 'production') {
@@ -11,7 +12,8 @@ if (process.env.NODE_ENV !== 'production') {
 // Iniciando App
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors({origin: process.env.CORS_ORIGIN.split(','), credentials: true}))
+app.use(cookieParser())
 
 // Iniciando Banco de dados
 

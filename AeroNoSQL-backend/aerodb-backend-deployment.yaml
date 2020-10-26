@@ -20,13 +20,16 @@ spec:
         name: aerodb-backend
     spec:
       containers:
-      - image: daanrsantiago/aerodb-backend:latest
+      - image: registry.hub.docker.com/daanrsantiago/aerodb-backend
         imagePullPolicy: IfNotPresent
         name: aerodb-backend-container
         ports:
         - containerPort: 80
           name: http
           protocol: TCP
+        volumeMounts:
+            - name: aerodb-backend-secret-files
+              mountPath: /app/firebase
         env:
           - name: MONGODB_USER
             valueFrom:
@@ -44,3 +47,11 @@ spec:
             value: '80'
           - name: MONGODB_URI
             value: mongodb+srv://mongodb.default.svc.cluster.local/aerodb?ssl=false&replicaSet=rs0&readPreference=secondaryPreferred&authSource=admin
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: ./firebase/aero-no-sql-dev-firebase-service-account-key.json
+          - name: CORS_ORIGIN
+            value: "http://localhost:3000,https://aero-no-sql-dev.web.app/,https://aero-no-sql-dev.firebaseapp.com/"
+      volumes:
+        - name: aerodb-backend-secret-files
+          secret:
+            secretName: aerodb-backend-secret

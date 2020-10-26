@@ -2,7 +2,9 @@
 /Database/migracao/node_modules
 /Database/migracao/teste_mongoose.js
 /Database/migracao/.env
+/Database/mongodb-secrets.yaml
 /AeroNoSQL-backend/node_modules
 /AeroNoSQL-backend/.env
-/Database/mongodb-secrets.yaml
+/AeroNoSQL-backend/aero-no-sql-dev-firebase-service-account-key.json
+/AeroNoSQL-backend/aerodb-backend-secret.yaml
 /AeroNoSQL-backend/package-lock.json

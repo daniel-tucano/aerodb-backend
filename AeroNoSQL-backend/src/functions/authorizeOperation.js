@@ -5,7 +5,7 @@ admin.initializeApp({
 });
 
 // Verify if the resource belongs to the client who made the request
-const verifyOwnership = async (authJWT, resource) => {
+const verifyOwnership = async (authJWT, userID) => {
 
     let isOwner = Boolean()
 
@@ -13,30 +13,25 @@ const verifyOwnership = async (authJWT, resource) => {
 
         // Checks if the auth JWT was signed correctly
         decodedAuthJWT = await admin.auth().verifyIdToken(authJWT)
-        
-        if(resource.creator.userId) {
-            isOwner = decodedAuthJWT.uid === resource.creator.userId
-        }else if(resource.creator) {
-            isOwner = decodedAuthJWT.uid === resource.creator
-            console.log(decodedAuthJWT.uid)
-            console.log(resource)
-            console.log(`inside resource.creator, isOwner: ${isOwner}`)
-        }
-    
+        isOwner = decodedAuthJWT.uid === userID
+        console.log(decodedAuthJWT.uid)
+        console.log(userID)
+        console.log(`inside resource.creator, isOwner: ${isOwner}`)
+
         return isOwner
 
-    } catch(error) {
+    } catch (error) {
         isOwner = false
-    
+
         console.log("CLIENT NOT AUTHORIZED: an error ocurred while verifying auth JWT signature")
         console.log(error)
-    
+
         return isOwner
     }
 
 }
 
-exports.authorizeOperation = async (req, resource) => {
+exports.authorizeOperation = async (req, userID) => {
 
     let isOwner = Boolean()
 
@@ -45,7 +40,7 @@ exports.authorizeOperation = async (req, resource) => {
     // Verifify if some authorization cookie was send with the request
     if (req.cookies.authJWT) {
         // Verify if the client own the resource
-        isOwner = await verifyOwnership(req.cookies.authJWT, resource)
+        isOwner = await verifyOwnership(req.cookies.authJWT, userID)
 
         if (isOwner) {
             // If the client own the resource it is authorized to do the operation

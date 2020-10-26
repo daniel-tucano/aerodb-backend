@@ -52,7 +52,10 @@ const AirfoilsMongoSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        userId: String
+        userID: {
+            type: String,
+            required: true,
+        }
     },
     postedDate: {
         type: Date,

@@ -48,8 +48,18 @@ const RunsMongoSchema = new mongoose.Schema({
         required: false,
     },
     creator: {
-        name: String,
-        userName: String,
+        name: {
+            type: String,
+            required: true,
+        },
+        userName: {
+            type: String,
+            required: true,
+        },
+        userID: {
+            type: String,
+            required: true,
+        }
     },
     postedDate: {
         type: Date,

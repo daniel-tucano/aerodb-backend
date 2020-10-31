@@ -59,7 +59,7 @@ DanielUser.save().then(() => {
 
 // Iniciando variavel que é campo comum entre documentos
 
-const DanielCreatorData = { name: DanielUser.name, userName: DanielUser.userName, userId: DanielUser.id }
+const DanielCreatorData = { name: DanielUser.name, userName: DanielUser.userName, userID: DanielUser.id }
 
 // Adicionando documentos na collection de counters que vão permitir a criação de IDs numéricos
 // Como ja temos esses IDs vindos do banco de dados SQL, iniciamos os valores com os ultimos de lá
@@ -231,6 +231,8 @@ function insertInDatabase(inicio, i) {
                         console.log(`Houve um problema ao adicionar o aerofólio ${Airfoil.AirfoilID}`)
                         console.log(error)
                     })
+
+                    UserModel.findByIdAndUpdate(DanielUser.id, {$addToSet: { userAirfoils: airfoilID }})
 
                     console.log('acabou até o airfoil ' + Airfoil.AirfoilID)
                     resolve()

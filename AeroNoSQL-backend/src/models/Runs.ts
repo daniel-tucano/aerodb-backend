@@ -1,4 +1,38 @@
-const mongoose = require('mongoose')
+import mongoose, { Document } from "mongoose"
+
+export interface RunDataType extends Document {
+    runID: number,
+    airfoilID: number,
+    airfoilObjID: string,
+    reynolds: number,
+    mach: number,
+    polar: {
+        alpha: number[],
+        cl: number[],
+        cd: number[],
+        cm: number[],
+    },
+    polarProperties: {
+        clMax: number,
+        cl0: number,
+        clAlpha: number,
+        cdMin: number,
+        cdMax: number,
+        clCdMax: number,
+        cm0: number,
+        alphaStall: number,
+        alpha0Cl: number,
+        alphaClCdMax: number,
+    },
+    source: string,
+    additionalData: object,
+    creator: {
+        name: string,
+        userName: string,
+        userID: string
+    },
+    postedDate: Date,
+}
 
 const RunsMongoSchema = new mongoose.Schema({
     runID: {
@@ -67,4 +101,4 @@ const RunsMongoSchema = new mongoose.Schema({
     },
 })
 
-mongoose.model('Run',RunsMongoSchema)
+export default mongoose.model<RunDataType>('Run',RunsMongoSchema)

@@ -1,7 +1,7 @@
-const { exec } = require('child_process')
-const express = require('express')
+import express, { Request, Response } from 'express'
+import { exec } from 'child_process'
+import fs from 'fs'
 const routes = express.Router()
-const fs = require('fs')
 
 const AirfoilsController = require('./controllers/AirfoilController')
 const ProjectController = require('./controllers/ProjectController')
@@ -41,17 +41,17 @@ routes.delete('/projects/:id', ProjectController.destroy)
 // Rotas de download
 
 // Download de projeto
-routes.get('/download/project', async (req, res) => {
-    function stringToBase64(str) {
+routes.get('/download/project', async (req: Request, res: Response) => {
+    function stringToBase64(str: string) {
         const buff = Buffer.from(str, 'utf8');
         return buff.toString('base64');
     }
 
-    execString = "python3 ./src/createProjectZip.py"
+    let execString = "python3 ./src/createProjectZip.py"
 
     for(let keyValue of Object.entries(req.query)) {
-        execString += ` ${stringToBase64(keyValue[0])}`
-        execString += ` ${stringToBase64(keyValue[1])}`
+        execString += ` ${stringToBase64(keyValue[0] as string)}`
+        execString += ` ${stringToBase64(keyValue[1] as string)}`
     }
 
     const python = exec(execString)
@@ -89,24 +89,24 @@ routes.get('/download/project', async (req, res) => {
 })
 
 // Download de arquivo de aerofolio .mat
-routes.get('/download/airfoilMatFile', async (req, res) => {
-    function stringToBase64(str) {
+routes.get('/download/airfoilMatFile', async (req: Request, res: Response) => {
+    function stringToBase64(str: string) {
         const buff = Buffer.from(str, 'utf8');
         return buff.toString('base64');
     }
 
-    execString = "python3 ./src/airfoilMatFileDownload.py"
+    let execString = "python3 ./src/airfoilMatFileDownload.py"
 
     for(let keyValue of Object.entries(req.query)) {
-        execString += ` ${stringToBase64(keyValue[0])}`
-        execString += ` ${stringToBase64(keyValue[1])}`
+        execString += ` ${stringToBase64(keyValue[0] as string)}`
+        execString += ` ${stringToBase64(keyValue[1] as string)}`
     }
 
     const python = exec(execString)
 
     console.log(execString)
     console.log(`executando script em python`)
-    python.stdout.on('data', (airfoilMatFilePath) => {
+    python.stdout.on('data', (airfoilMatFilePath: string) => {
         
         try {
             console.log(airfoilMatFilePath)

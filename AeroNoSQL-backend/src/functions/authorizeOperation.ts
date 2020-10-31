@@ -1,18 +1,20 @@
-const admin = require('firebase-admin')
+import { Request } from 'express';
+import admin from 'firebase-admin'
+
 // Initializes firebase admin SDK. File with app configuration and enviroment variable pointing to it is needed
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
 });
 
 // Verify if the resource belongs to the client who made the request
-const verifyOwnership = async (authJWT, userID) => {
+const verifyOwnership = async (authJWT: string, userID: string): Promise<boolean> => {
 
     let isOwner = Boolean()
 
     try {
 
         // Checks if the auth JWT was signed correctly
-        decodedAuthJWT = await admin.auth().verifyIdToken(authJWT)
+        const decodedAuthJWT = await admin.auth().verifyIdToken(authJWT)
         isOwner = decodedAuthJWT.uid === userID
         console.log(decodedAuthJWT.uid)
         console.log(userID)
@@ -31,7 +33,9 @@ const verifyOwnership = async (authJWT, userID) => {
 
 }
 
-exports.authorizeOperation = async (req, userID) => {
+type authorizeOperationType = (req: Request, userID: string) => Promise<boolean> 
+
+export const authorizeOperation: authorizeOperationType =  async function (req: Request, userID: string): Promise<boolean> {
 
     let isOwner = Boolean()
 

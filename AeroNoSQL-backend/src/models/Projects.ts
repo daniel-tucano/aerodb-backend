@@ -1,4 +1,27 @@
-const mongoose = require('mongoose')
+import mongoose, { Document } from "mongoose"
+
+export interface ProjectDataType extends Document {
+    creator: {
+        name: string,
+        userName: string,
+        userID: string
+    },
+    name: string,
+    airfoils: SelectionAirfoilDataType[],
+}
+
+type SelectionAirfoilDataType = {
+    airfoilID: number,
+    name: string,
+    geometrie: { x: number[], y: number[], side: string[] },
+    runsData: SelectionRunDataType[],
+}
+
+type SelectionRunDataType = {
+    runID: number,
+    mach: number,
+    reynolds: number,
+}
 
 const ProjectMongoSchema = new mongoose.Schema({
     creator: {
@@ -50,4 +73,4 @@ const ProjectMongoSchema = new mongoose.Schema({
     }]
 })
 
-mongoose.model('Project', ProjectMongoSchema)
+export default mongoose.model<ProjectDataType>('Project', ProjectMongoSchema)

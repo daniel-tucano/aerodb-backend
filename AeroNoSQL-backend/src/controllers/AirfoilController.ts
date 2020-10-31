@@ -1,27 +1,35 @@
-const mongoose = require('mongoose')
+import Airfoil from '../models/Airfoils'
+import User from '../models/Users'
+import Counter from '../models/Counters'
+import { Request, Response } from "express"
 const breezeMongodb = require('breeze-mongodb')
-const { authorizeOperation } = require('../functions/authorizeOperation')
+import { authorizeOperation } from '../functions/authorizeOperation'
+import { paginate } from '../functions/paginate'
+import { QueryFindOneAndRemoveOptions } from 'mongoose'
 
-const Airfoil = mongoose.model('Airfoil')
-const Counter = mongoose.model('Counter')
-const User = mongoose.model('User')
 
 module.exports = {
-    async index(req, res) {
-        const { page = 1, limit = 10 } = req.query
-        const ODataMongoQuery = new breezeMongodb.MongoQuery(req.query)
-        const airfoils = await Airfoil.paginate(ODataMongoQuery.filter, { page, limit });
+    async index(req: Request, res: Response) {
+        let { page = 1, limit = 10 } = req.query
+        page = Number(page)
+        limit = Number(limit)
 
-        return res.json(airfoils);
+        if (Number.isInteger(page) && Number.isInteger(limit)) {
+            const ODataMongoQuery = new breezeMongodb.MongoQuery(req.query)
+            const airfoils = await paginate(Airfoil, ODataMongoQuery.filter, { page, limit });
+            return res.json(airfoils);
+        } else {
+            return res.send('page and limit must be integers')
+        }
     },
 
-    async show(req, res) {
-        const airfoil = await Airfoil.findOne({ airfoilID: req.params.id })
+    async show(req: Request, res: Response) {
+        const airfoil = await Airfoil.findOne({ airfoilID: Number(req.params.id) })
 
         return res.json(airfoil)
     },
 
-    async store(req, res) {
+    async store(req: Request, res: Response) {
 
         // Checks if the operation is authorized
         const isAuthorized = await authorizeOperation(req, req.body.creator.userID)
@@ -31,6 +39,11 @@ module.exports = {
 
             // Obtain the counter wich will be the new airfoilID
             const airfoilCounter = await Counter.findOneAndUpdate({ refCollection: "Airfoils" }, { $inc: { counter: 1 } }, { new: true, useFindAndModify: false })
+            // If fails to update counter, return failure and logs to console
+            if (!airfoilCounter) {
+                console.log('Fail to increment airfoil counter!')
+                return res.send('Fail to increment airfoil counter!')
+            }
             // Add airfoilID to the request
             req.body.airfoilID = airfoilCounter.counter
             // Add nameLowerCase to the request
@@ -54,17 +67,22 @@ module.exports = {
 
     },
 
-    async update(req, res) {
+    async update(req: Request, res: Response) {
 
         // Reading the resource current value
-        let airfoil = await Airfoil.findOne({ airfoilID: req.params.id })
+        let airfoil = await Airfoil.findOne({ airfoilID: Number(req.params.id) })
+
+        // Checks if the airfoil exists
+        if (!airfoil) {
+            return res.send('airfoil dont exist')
+        }
 
         // Checks if the operation is authorized
         const isAuthorized = await authorizeOperation(req, airfoil.creator.userID)
 
         if (isAuthorized) {
             // If it is authorized, perform the operation and return its result
-            airfoil = await Airfoil.findOneAndUpdate({ airfoilID: req.params.id }, req.body, { new: true, useFindAndModify: false })
+            airfoil = await Airfoil.findOneAndUpdate({ airfoilID: Number(req.params.id) }, req.body, { new: true, useFindAndModify: false })
             return res.json(airfoil)
         } else {
             // Otherwise return an error
@@ -73,17 +91,22 @@ module.exports = {
 
     },
 
-    async destroy(req, res) {
+    async destroy(req: Request, res: Response) {
 
         // Reading the resource current value
-        let airfoil = await Airfoil.findOne({ airfoilID: req.params.id })
+        let airfoil = await Airfoil.findOne({ airfoilID: Number(req.params.id) })
+
+        // Checks if the airfoil exists
+        if (!airfoil) {
+            return res.send('airfoil dont exist')
+        }
 
         // Checks if the operation is authorized
         const isAuthorized = await authorizeOperation(req, airfoil.creator.userID)
 
         if (isAuthorized) {
             // If it is authorized, perform the operation and return its result
-            const airfoil_deleted = await Airfoil.findOneAndRemove({ airfoilID: req.params.id}, { useFindAndModify: false })
+            const airfoil_deleted = await Airfoil.findOneAndRemove({ airfoilID: Number(req.params.id)}, { useFindAndModify: false } as QueryFindOneAndRemoveOptions)
 
             // If successfully deleted the airfoil, then uptdate user to reflect deletion
             if (airfoil_deleted) {

@@ -1,4 +1,21 @@
-const mongoose = require('mongoose')
+import mongoose, { Document } from "mongoose"
+
+export interface UserDataType extends Document {
+    uid: string,
+    name: string,
+    userName: string,
+    email: string,
+    gender: string,
+    yearOfBirth: Date,
+    institution?: string,
+    about: string,
+    projects: {
+        name: string,
+        projectID: string
+    }[],
+    userAirfoils: number[],
+    favoriteAirfoils: string[],
+} 
 
 const UserMongoSchema = new mongoose.Schema({
     uid: {
@@ -41,4 +58,4 @@ const UserMongoSchema = new mongoose.Schema({
     favoriteAirfoils: [String],
 })
 
-mongoose.model('User',UserMongoSchema)
+export default mongoose.model<UserDataType>('User',UserMongoSchema)

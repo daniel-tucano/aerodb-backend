@@ -18,6 +18,8 @@ RUN pip3 install --requirement=pip-packages.txt
 
 COPY . .
 
+RUN npx tsc
+
 EXPOSE 80
 
 CMD ["npm", "start"]

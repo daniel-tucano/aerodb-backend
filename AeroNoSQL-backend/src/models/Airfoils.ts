@@ -1,4 +1,31 @@
-const mongoose = require('mongoose')
+import mongoose, { Document } from "mongoose"
+
+export interface AirfoilDataType extends Document {
+    airfoilID: number,
+    name: string,
+    nameLowerCase: string,
+    filename: string,
+    geometrie: {
+        side: string[],
+        x: number[],
+        y: number[],
+    },
+    thickness: number,
+    xThickness: number,
+    camber: number,
+    xCamber: number,
+    source: string,
+    creator: {
+        name: string,
+        userName: string,
+        userID: string
+    },
+    postedDate: Date,
+    runs: {
+        runIDs: number[]
+        runObjIDs: string[]
+    }
+}
 
 const AirfoilsMongoSchema = new mongoose.Schema({
     airfoilID: {
@@ -73,4 +100,4 @@ const AirfoilsMongoSchema = new mongoose.Schema({
     }
 })
 
-mongoose.model('Airfoil',AirfoilsMongoSchema)
+export default mongoose.model<AirfoilDataType>('Airfoil',AirfoilsMongoSchema)

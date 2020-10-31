@@ -4,7 +4,9 @@
 /Database/migracao/.env
 /Database/mongodb-secrets.yaml
 /AeroNoSQL-backend/node_modules
+/AeroNoSQL-backend/build
 /AeroNoSQL-backend/.env
 /AeroNoSQL-backend/aero-no-sql-dev-firebase-service-account-key.json
 /AeroNoSQL-backend/aerodb-backend-secret.yaml
 /AeroNoSQL-backend/package-lock.json
+.vscode/launch.json

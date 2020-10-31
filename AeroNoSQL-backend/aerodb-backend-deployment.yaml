@@ -20,8 +20,8 @@ spec:
         name: aerodb-backend
     spec:
       containers:
-      - image: registry.hub.docker.com/daanrsantiago/aerodb-backend
-        imagePullPolicy: IfNotPresent
+      - image: registry.hub.docker.com/daanrsantiago/aerodb-backend:latest
+        imagePullPolicy: Always
         name: aerodb-backend-container
         ports:
         - containerPort: 80

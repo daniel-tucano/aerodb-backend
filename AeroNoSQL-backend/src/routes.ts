@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import { exec } from 'child_process'
 import fs from 'fs'
+import sessionLogin from './functions/sessionLogin'
 const routes = express.Router()
 
 const AirfoilsController = require('./controllers/AirfoilController')
@@ -8,6 +9,11 @@ const ProjectController = require('./controllers/ProjectController')
 const RunController = require('./controllers/RunController')
 const UserController = require('./controllers/UserController')
 
+// CSRF Route
+routes.get('/csrf-token', (req,res) => res.json({ csrfToken: req.csrfToken() }))
+
+// Session Token Route
+routes.post('/sessionLogin', sessionLogin)
 
 // Airfoil Routes
 routes.get('/airfoils', AirfoilsController.index)
@@ -138,4 +144,4 @@ routes.get('/download/airfoilMatFile', async (req: Request, res: Response) => {
 
 })
 
-module.exports = routes
+export default routes

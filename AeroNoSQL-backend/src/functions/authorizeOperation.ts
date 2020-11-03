@@ -1,22 +1,17 @@
 import { Request } from 'express';
-import admin from 'firebase-admin'
-
-// Initializes firebase admin SDK. File with app configuration and enviroment variable pointing to it is needed
-admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
-});
+import app from '../../app'
 
 // Verify if the resource belongs to the client who made the request
-const verifyOwnership = async (authJWT: string, userID: string): Promise<boolean> => {
+const verifyOwnership = async (sessionToken: string, userID: string): Promise<boolean> => {
 
     let isOwner = Boolean()
 
     try {
 
         // Checks if the auth JWT was signed correctly
-        const decodedAuthJWT = await admin.auth().verifyIdToken(authJWT)
-        isOwner = decodedAuthJWT.uid === userID
-        console.log(decodedAuthJWT.uid)
+        const decodedSessionToken = await app.fireApp.auth().verifySessionCookie(sessionToken)
+        isOwner = decodedSessionToken.uid === userID
+        console.log(decodedSessionToken.uid)
         console.log(userID)
         console.log(`inside resource.creator, isOwner: ${isOwner}`)
 
@@ -25,7 +20,7 @@ const verifyOwnership = async (authJWT: string, userID: string): Promise<boolean
     } catch (error) {
         isOwner = false
 
-        console.log("CLIENT NOT AUTHORIZED: an error ocurred while verifying auth JWT signature")
+        console.log("CLIENT NOT AUTHORIZED: an error ocurred while verifying session token signature")
         console.log(error)
 
         return isOwner
@@ -42,9 +37,9 @@ export const authorizeOperation: authorizeOperationType =  async function (req: 
     let isAuthorized = Boolean()
 
     // Verifify if some authorization cookie was send with the request
-    if (req.cookies.authJWT) {
+    if (req.cookies.session) {
         // Verify if the client own the resource
-        isOwner = await verifyOwnership(req.cookies.authJWT, userID)
+        isOwner = await verifyOwnership(req.cookies.session, userID)
 
         if (isOwner) {
             // If the client own the resource it is authorized to do the operation
@@ -62,7 +57,7 @@ export const authorizeOperation: authorizeOperationType =  async function (req: 
         isAuthorized = false
 
         // Logs the status on the console
-        console.log("CLIENT NOT AUTHORIZED: authJWT was not provided")
+        console.log("CLIENT NOT AUTHORIZED: session token was not provided")
     }
 
     // Return the resulting authorization status

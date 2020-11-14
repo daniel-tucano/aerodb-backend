@@ -25,9 +25,8 @@ pipeline {
             steps {
                 script {
                     docker.image('daanrsantiago/aerodb-backend').inside {
-                        dir(path: '/app') {
-                            sh 'npm run test'
-                        }
+                        sh 'cd /app'
+                        sh 'npm run test'
                     }
                 }
             }

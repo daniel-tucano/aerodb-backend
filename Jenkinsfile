@@ -26,8 +26,7 @@ pipeline {
         steps {
             script {
                 docker.image('daanrsantiago/aerodb-backend').inside {
-                    sh 'npm run test',
-                    sh "echo 'Testes passaram com sucesso'"
+                    sh "npm run test"
                 }
             }
         }

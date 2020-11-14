@@ -14,9 +14,10 @@ interface IEnv {
     MONGO_URL: string
     MONGODB_USER: string
     MONGODB_PASSWORD: string
+    NODE_ENV: string
 }
 
-class AppController {
+export class AppController {
     express: Express
     env!: IEnv
     fireApp!: admin.app.App
@@ -35,7 +36,7 @@ class AppController {
     private setEnviromentVariables() {
         // Load enviroment variables if not in production
         if (process.env.NODE_ENV !== 'production') {
-            
+
             let dotenvConfig
 
             if (process.env.NODE_ENV === "test_unit") {
@@ -49,9 +50,9 @@ class AppController {
             require('dotenv').config(dotenvConfig)
         }
 
-        const { CORS_ORIGIN, MONGO_URL, MONGODB_USER, MONGODB_PASSWORD } = process.env
+        const { CORS_ORIGIN, MONGO_URL, MONGODB_USER, MONGODB_PASSWORD, NODE_ENV } = process.env
 
-        this.env = { CORS_ORIGIN, MONGO_URL, MONGODB_USER, MONGODB_PASSWORD } as IEnv
+        this.env = { CORS_ORIGIN, MONGO_URL, MONGODB_USER, MONGODB_PASSWORD, NODE_ENV } as IEnv
     }
 
     private dbConnect() {
@@ -60,7 +61,7 @@ class AppController {
         const auth = this.env.MONGODB_USER && this.env.MONGODB_PASSWORD ? { user: this.env.MONGODB_USER, password: this.env.MONGODB_PASSWORD } : undefined
 
         mongoose.connect(this.env.MONGO_URL as string,
-            { useNewUrlParser: true, useUnifiedTopology: true, auth } as mongoose.ConnectionOptions).then( mongoose => {
+            { useNewUrlParser: true, useUnifiedTopology: true, auth } as mongoose.ConnectionOptions).then(mongoose => {
                 console.log('Conexão com o mongoose deu certo')
                 this.mongoose = mongoose
             }).catch((erro) => {

@@ -1,7 +1,6 @@
 import User from '../models/Users'
 import { Request, Response } from "express"
 import { paginate } from '../functions/paginate'
-const breezeMongodb = require('breeze-mongodb')
 
 module.exports = {
     async index(req: Request, res: Response) {
@@ -9,13 +8,12 @@ module.exports = {
         page = Number(page)
         limit = Number(limit)
 
-        if (Number.isInteger(page) && Number.isInteger(limit)) {
-            const ODataMongoQuery = new breezeMongodb.MongoQuery(req.query)
-            const users = await paginate(User, ODataMongoQuery.filter, { page, limit });
-            return res.json(users);
-        } else {
-            return res.send('page and limit must be integers')
-        }
+        // Checks if page and limit query parameters are valid
+        if (!(Number.isInteger(page) && Number.isInteger(limit))) return res.status(400).send('PAGE AND LIMIT PARAMETERS MUST BE NUMBERS')
+        
+        const users = await paginate(User, req.ODataFilter, { page, limit });
+        
+        return res.json(users);
     },
 
     async show(req: Request, res: Response) {
@@ -33,7 +31,7 @@ module.exports = {
     },
 
     async update(req: Request, res: Response) {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, useFindAndModify: false })
 
         return res.json(user)
     },

@@ -1,3 +1,4 @@
+import { isInteger } from "lodash"
 import mongoose, { Document } from "mongoose"
 
 export interface ProjectDataType extends Document {
@@ -10,14 +11,14 @@ export interface ProjectDataType extends Document {
     airfoils: SelectionAirfoilDataType[],
 }
 
-type SelectionAirfoilDataType = {
+interface SelectionAirfoilDataType {
     airfoilID: number,
     name: string,
     geometrie: { x: number[], y: number[], side: string[] },
     runsData: SelectionRunDataType[],
 }
 
-type SelectionRunDataType = {
+interface SelectionRunDataType {
     runID: number,
     mach: number,
     reynolds: number,

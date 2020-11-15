@@ -1,0 +1,5 @@
+FROM daanrsantiago/aerodb-backend
+
+WORKDIR /app
+
+CMD [ "npm", "run", "test"]

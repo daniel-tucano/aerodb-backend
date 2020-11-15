@@ -71,10 +71,12 @@ export class AppController {
     }
 
     private setFirebase() {
-        // Initializes firebase admin SDK. File with app configuration and enviroment variable pointing to it is needed
-        this.fireApp = admin.initializeApp({
-            credential: admin.credential.applicationDefault(),
-        });
+        // If not in test enviroment initializes firebase admin SDK. File with app configuration and enviroment variable pointing to it is needed
+        if (this.env.NODE_ENV !== 'test_unit' && this.env.NODE_ENV !== 'test_integration') {
+            this.fireApp = admin.initializeApp({
+                credential: admin.credential.applicationDefault(),
+            });
+        }
     }
 
     private middlewares() {

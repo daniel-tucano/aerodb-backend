@@ -27,7 +27,7 @@ pipeline {
             // nenhum framework de testes atualmente, então apenas utilizaremos um echo 'testes passaram com sucesso'
             steps {
                 script {
-                    docker.image('daanrsantiago/aerodb-backend-test').run('--rm') {}
+                    sh "docker run --rm daanrsantiago/aerodb-backend-test"
                 }
             }
         }

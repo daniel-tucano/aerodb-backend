@@ -1,13 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Instala dependencias') {
-            steps {
-                dir(path: './AeroNoSQL-backend') {
-                    sh 'npm install'
-                }
-            }
-        }
 
         stage('Constroi a imagem da apĺicação no docker') {
             steps {
@@ -23,7 +16,7 @@ pipeline {
             steps {
                 dir(path: '.ArtoNoSQL-backend') {
                     script {
-                        def app = docker.build('daanrsantiago/aerodb-backend-test','--no-cache -f Dockerfile.test')
+                        def app = docker.build('daanrsantiago/aerodb-backend-test','--no-cache -f Dockerfile.test .')
                     }
                 }
             }

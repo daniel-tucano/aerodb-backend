@@ -14,7 +14,7 @@ pipeline {
 
         stage('Constroi a imagem de teste da aplicação no docker') {
             steps {
-                dir(path: '.ArtoNoSQL-backend') {
+                dir(path: './AeroNoSQL-backend') {
                     script {
                         def app = docker.build('daanrsantiago/aerodb-backend-test','--no-cache -f Dockerfile.test .')
                     }
@@ -27,7 +27,7 @@ pipeline {
             // nenhum framework de testes atualmente, então apenas utilizaremos um echo 'testes passaram com sucesso'
             steps {
                 script {
-                    docker.image('daanrsantiago/aerodb-backend-test').withRun('-rm') {}
+                    docker.image('daanrsantiago/aerodb-backend-test').withRun('--rm') {}
                 }
             }
         }

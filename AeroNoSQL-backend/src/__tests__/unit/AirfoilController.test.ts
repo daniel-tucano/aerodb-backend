@@ -42,7 +42,7 @@ describe('AirfoilController tests', () => {
     it('Should unauthorize to insert the airfoil document', async () => {
         const res = await request(app.express).post('/airfoils').send(airfoilMocks.unauthorizedAirfoil).auth(JWTMocks.user_1, { type: "bearer" })
 
-        expect(res.status).not.toBe(401)
+        expect(res.status).toBe(401)
     })
 
     it('Should delete airfoil document', async () => {

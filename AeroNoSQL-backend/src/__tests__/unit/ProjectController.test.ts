@@ -54,6 +54,20 @@ describe('projectController tests', () => {
         } catch {}
     })
 
+    it('Should authorize to get an project', async () => {
+        const insertRes = await request(app.express).post('/projects').auth(JWTMocks.user_1, { type: 'bearer' }).send(projectMocks.authorizedProject)
+        const res = await request(app.express).get(`/projects/${insertRes.body._id}`).auth(JWTMocks.user_1, { type: 'bearer' })
+
+        expect(res.status).toBe(200)
+    })
+
+    it('Should unauthorize to get an project', async () => {
+        const insertRes = await request(app.express).post('/projects').auth(JWTMocks.user_1, { type: 'bearer' }).send(projectMocks.authorizedProject)
+        const res = await request(app.express).get(`/projects/${insertRes.body._id}`).auth(JWTMocks.user_2, { type: 'bearer' })
+
+        expect(res.status).toBe(401)
+    })
+
     it('Should authorize to insert the project document', async () => {
         const res = await request(app.express).post('/projects').auth(JWTMocks.user_1, { type: 'bearer' }).send(projectMocks.authorizedProject)
 

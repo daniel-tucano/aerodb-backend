@@ -29,7 +29,7 @@ module.exports = {
         if (!project) return res.status(404).send('project dont exist')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== req.body.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== project.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // If it is authorized, perform the operation and return its result
         return res.json(project)

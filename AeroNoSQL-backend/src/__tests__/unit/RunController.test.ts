@@ -9,7 +9,7 @@ import request from 'supertest'
 import app from '../../../app'
 import Counter from '../../models/Counters'
 import Users from '../../models/Users'
-import Runs from '../../models/Runs'
+import Runs, { RunDataType } from '../../models/Runs'
 import Airfoils from '../../models/Airfoils'
 import airfoilMocks from '../mocks/airfoilMocks'
 import userMocks from '../mocks/userMocks'
@@ -129,6 +129,28 @@ describe('runController tests', () => {
         }
         const runPaginationRes = await request(app.express).get('/runs?page=2')
 
-        expect(runPaginationRes.body.docs[0].runID === 11 && runPaginationRes.body.page === 2).toBe(true)
+        expect(runPaginationRes.body.docs[0].runID).toBe(11)
+        expect(runPaginationRes.body.page).toBe(2)
+    })
+
+    it('Should filter pagination by airfoilID = 10', async () => {
+        // Add runs with airfoilID = 1
+        for (let i = 0; i < 20; i++) {
+            await request(app.express).post('/runs').auth(JWTMocks.user_1, { type: 'bearer' }).send(runMocks.authorizedRun)
+        }
+        // Add 20 airfoils to have some with airfoilID = 10
+        for (let i = 0; i < 20; i++) {
+            await request(app.express).post('/airfoils').auth(JWTMocks.user_1, { type: "bearer" }).send(airfoilMocks.authorizedAirfoil)
+        }
+        // Add runs with airfoilID = 10
+        for (let i = 0; i < 20; i++) {
+            await request(app.express).post('/runs').auth(JWTMocks.user_1, { type: 'bearer' }).send({...runMocks.authorizedRun, airfoilID: 10})
+        }
+        const runPaginationRes = await request(app.express).get('/runs?$filter=airfoilID eq 10')
+        
+        // Expect all results from query to have airfoilID === 10
+        expect(runPaginationRes.body.docs.every( (runDoc: RunDataType) => runDoc.airfoilID === 10)).toBe(true)
+        // Expect pagination totalDocs to be 20 (number of docs with airfoilID === 10)
+        expect(runPaginationRes.body.totalDocs).toBe(20)
     })
 })

@@ -6,6 +6,7 @@
 /AeroNoSQL-backend/node_modules
 /AeroNoSQL-backend/build
 /AeroNoSQL-backend/.env
+/AeroNoSQL-backend/globalConfig.json
 /AeroNoSQL-backend/aero-no-sql-dev-firebase-service-account-key.json
 /AeroNoSQL-backend/aerodb-backend-secret.yaml
 /AeroNoSQL-backend/package-lock.json

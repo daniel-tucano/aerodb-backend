@@ -33,7 +33,11 @@ export const paginate = async (Model: Model<any>, query: FilterQuery<any>, {page
     const paginationResult = {} as PaginateResult
     
     paginationResult.docs = await Model.find(query).limit(limit).skip((page-1)*offset).lean(true).exec()
-    paginationResult.totalDocs = await Model.find(query).estimatedDocumentCount().exec()
+    if(query) {
+        paginationResult.totalDocs = await Model.countDocuments(query)
+    } else {
+        paginationResult.totalDocs = await Model.estimatedDocumentCount()
+    }
     paginationResult.limit = limit
     paginationResult.totalPages =  Math.ceil(paginationResult.totalDocs/limit)
     paginationResult.page = page

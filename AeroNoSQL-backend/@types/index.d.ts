@@ -5,7 +5,8 @@ declare global {
     namespace Express {
         export interface Request {
             decodedIdToken?: auth.DecodedIdToken;
-            ODataFilter: Object
+            ODataFilter: Object,
+            ODataSort: Object[] | undefined
         }
     }
 }

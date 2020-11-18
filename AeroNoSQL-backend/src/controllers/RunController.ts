@@ -15,7 +15,7 @@ module.exports = {
         // Checks if page and limit query parameters are valid
         if (!(Number.isInteger(page) && Number.isInteger(limit))) return res.status(400).send('PAGE AND LIMIT PARAMETERS MUST BE NUMBERS')
 
-        const runs = await paginate(Run, req.ODataFilter, { page, limit });
+        const runs = await paginate(Run, req.ODataFilter, req.ODataSort, { page, limit });
 
         return res.json(runs);
     },

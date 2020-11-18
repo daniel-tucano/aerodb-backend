@@ -23,7 +23,7 @@ interface PaginateResult {
     nextPage: number | null
 }
 
-export const paginate = async (Model: Model<any>, query: FilterQuery<any>, {page = 1, limit = 10}: PaginateOptions): Promise<PaginateResult> => {
+export const paginate = async (Model: Model<any>, query: FilterQuery<any>, sort: Object[] | string[] | undefined, {page = 1, limit = 10}: PaginateOptions): Promise<PaginateResult> => {
     // Inicializando os valores opcionais caso nao tenham sido fornecidos
     query = query || {}
     limit = typeof limit === "string" ? Number(limit) : limit
@@ -32,8 +32,18 @@ export const paginate = async (Model: Model<any>, query: FilterQuery<any>, {page
     
     const paginationResult = {} as PaginateResult
     
-    paginationResult.docs = await Model.find(query).limit(limit).skip((page-1)*offset).lean(true).exec()
-    if(query) {
+    // if sort parameter is not falsy then 
+    if (sort) {
+        let findQuery = Model.find(query).limit(limit).skip((page-1)*offset).lean(true)
+        for (const sortObj of sort) {
+            findQuery.sort(sortObj)
+        }
+        paginationResult.docs = await findQuery.exec()
+    } else {
+        paginationResult.docs = await Model.find(query).limit(limit).skip((page-1)*offset).lean(true).exec()
+    }
+
+    if (query) {
         paginationResult.totalDocs = await Model.countDocuments(query)
     } else {
         paginationResult.totalDocs = await Model.estimatedDocumentCount()

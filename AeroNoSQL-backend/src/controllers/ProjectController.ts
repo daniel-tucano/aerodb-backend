@@ -17,7 +17,7 @@ module.exports = {
         if (!(Number.isInteger(page) && Number.isInteger(limit))) return res.status(400).send('PAGE AND LIMIT PARAMETERS MUST BE NUMBERS')
 
         // Perform the operation and return its result
-        const projects = await paginate(Project, { ...req.ODataFilter, "creator.userID": req.decodedIdToken?.uid }, { page, limit })
+        const projects = await paginate(Project, { ...req.ODataFilter, "creator.userID": req.decodedIdToken?.uid }, req.ODataSort, { page, limit })
         
         return res.json(projects)
     },

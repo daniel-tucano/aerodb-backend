@@ -15,6 +15,7 @@ import airfoilMocks from '../mocks/airfoilMocks'
 import userMocks from '../mocks/userMocks'
 import runMocks from '../mocks/runMocks'
 import JWTMocks from '../mocks/JWTMocks'
+import { random } from 'lodash'
 
 jest.setTimeout(10000)
 
@@ -134,15 +135,15 @@ describe('runController tests', () => {
     })
 
     it('Should filter pagination by airfoilID = 10', async () => {
-        // Add runs with airfoilID = 1
+        // Insert runs with airfoilID = 1
         for (let i = 0; i < 20; i++) {
             await request(app.express).post('/runs').auth(JWTMocks.user_1, { type: 'bearer' }).send(runMocks.authorizedRun)
         }
-        // Add 20 airfoils to have some with airfoilID = 10
+        // Insert 20 airfoils to have some with airfoilID = 10
         for (let i = 0; i < 20; i++) {
             await request(app.express).post('/airfoils').auth(JWTMocks.user_1, { type: "bearer" }).send(airfoilMocks.authorizedAirfoil)
         }
-        // Add runs with airfoilID = 10
+        // Insert runs with airfoilID = 10
         for (let i = 0; i < 20; i++) {
             await request(app.express).post('/runs').auth(JWTMocks.user_1, { type: 'bearer' }).send({...runMocks.authorizedRun, airfoilID: 10})
         }
@@ -152,5 +153,19 @@ describe('runController tests', () => {
         expect(runPaginationRes.body.docs.every( (runDoc: RunDataType) => runDoc.airfoilID === 10)).toBe(true)
         // Expect pagination totalDocs to be 20 (number of docs with airfoilID === 10)
         expect(runPaginationRes.body.totalDocs).toBe(20)
+    })
+
+    it('Should order pagination results by ascendent mach', async () => {
+        // Insert runs with random mach values
+        for (let i = 0; i < 20; i++) {
+            await request(app.express).post('/runs').auth(JWTMocks.user_1, { type: 'bearer' }).send({...runMocks.authorizedRun, mach: Math.random()})
+        }
+        const runPaginationRes = await request(app.express).get('/runs?$orderby=mach')
+
+        // Expect machs in doc array to be in ascending order
+        expect(runPaginationRes.body.docs.every( (run: RunDataType,index: number,runsArray: Array<RunDataType>) => {
+            if (index+1 === runsArray.length) return true
+            return runsArray[index+1].mach >= run.mach
+        })).toBe(true)
     })
 })

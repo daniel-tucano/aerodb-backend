@@ -48,12 +48,12 @@ for index,_ in enumerate(request_args_decoded):
 
 request_args = request_args_dict
 
-if request_args and 'airfoilId' in request_args:
-    # print(request_args['airfoilId'])
-    if is_float(request_args['airfoilId']):
-        airfoilId = float(request_args['airfoilId'])
-        if airfoilId.is_integer():
-            airfoilData = requests.get('http://'+os.environ['AERODB_BACKEND_LOADBALANCER_SERVICE_HOST']+'/airfoils/'+str(airfoilId), timeout=4.0).json()
+if request_args and 'airfoilID' in request_args:
+    # print(request_args['airfoilID'])
+    if is_float(request_args['airfoilID']):
+        airfoilID = float(request_args['airfoilID'])
+        if airfoilID.is_integer():
+            airfoilData = requests.get('http://'+os.environ['AERODB_BACKEND_LOADBALANCER_SERVICE_HOST']+'/airfoils/'+str(airfoilID), timeout=4.0).json()
             # print(airfoilData)
             if airfoilData:
                 filteredAirfoilData = {'airfoil':{'name':airfoilData['name'],  'thickness':airfoilData['thickness'],'xThickness':airfoilData['xThickness'], 'camber':airfoilData['camber'], 'xCamber':airfoilData['xCamber'], 'geometrie': airfoilData['geometrie']}}
@@ -78,9 +78,9 @@ if request_args and 'airfoilId' in request_args:
             else:
                 response = 'airfoilID not found'
         else:
-            response = 'airfoilId should be integer'
+            response = 'airfoilID should be integer'
     else:
-        response = 'airfoilId shoud be numeric'
+        response = 'airfoilID shoud be numeric'
 else:
     response = "Your query should include an '?airfoilID=[number]' at the end"
 

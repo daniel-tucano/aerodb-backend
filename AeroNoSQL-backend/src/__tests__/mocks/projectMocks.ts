@@ -4,7 +4,7 @@ const baseInsertProject = {
     creator: {
         name: "mock user",
         userName: "@mockUser",
-        userID: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
+        uid: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
     },
     name: "Projeto Teste",
     airfoils: [{
@@ -64,11 +64,11 @@ export default {
 
     authorizedProject: _.cloneDeep(baseInsertProject),
 
-    unauthorizedUserIDProject: { ...baseInsertProject, creator: { name: "mock user", userName: "@mockUser", userID: "123" } },
+    unauthorizeduidProject: { ...baseInsertProject, creator: { name: "mock user", userName: "@mockUser", uid: "123" } },
 
     updatedProject ,
 
-    unauthorizedCreatorProject: { ...baseInsertProject, creator:{ name: "mocking bird user", userName: "@mockingBirdUser", userID: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2" } },
+    unauthorizedCreatorProject: { ...baseInsertProject, creator:{ name: "mocking bird user", userName: "@mockingBirdUser", uid: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2" } },
 
     invalidAirfoilProject ,
 

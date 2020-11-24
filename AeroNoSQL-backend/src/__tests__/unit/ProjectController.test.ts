@@ -74,8 +74,8 @@ describe('projectController tests', () => {
         expect(res.status).toBe(200)
     })
 
-    it('Should unauthorize to insert the project document with UserID diferent then authenticated user uid', async () => {
-        const res = await request(app.express).post('/projects').send(projectMocks.unauthorizedUserIDProject).auth(JWTMocks.user_1, { type: "bearer" })
+    it('Should unauthorize to insert the project document with uid diferent then authenticated user uid', async () => {
+        const res = await request(app.express).post('/projects').send(projectMocks.unauthorizeduidProject).auth(JWTMocks.user_1, { type: "bearer" })
 
         expect(res.status).toBe(401)
     })
@@ -105,7 +105,7 @@ describe('projectController tests', () => {
         expect(res.status).toBe(404)
     })
     
-    it('Should unauthorize to delete project document with UserID diferent then authenticated user uid', async () => {
+    it('Should unauthorize to delete project document with uid diferent then authenticated user uid', async () => {
         const insertedProjectRes = await request(app.express).post('/projects').auth(JWTMocks.user_1, { type: 'bearer' }).send(projectMocks.authorizedProject)
         const res = await request(app.express).delete(`/projects/${insertedProjectRes.body._id}`).auth(JWTMocks.user_2, { type: 'bearer' })
         
@@ -148,7 +148,7 @@ describe('projectController tests', () => {
 
     it('Should add project to user projects when insert project document', async () => {
         const insertedProjectRes = await request(app.express).post('/projects').auth(JWTMocks.user_1, { type: 'bearer' }).send(projectMocks.authorizedProject)
-        const userRes = await request(app.express).get(`/users/${insertedProjectRes.body.creator.userID}?uid=true`).auth(JWTMocks.user_1, { type: 'bearer' })
+        const userRes = await request(app.express).get(`/users/${insertedProjectRes.body.creator.uid}?uid=true`).auth(JWTMocks.user_1, { type: 'bearer' })
 
         expect(_.some(userRes.body.projects,{ name: insertedProjectRes.body.name , projectID: insertedProjectRes.body._id})).toBe(true)
     })
@@ -156,7 +156,7 @@ describe('projectController tests', () => {
     it('Should remove projects from user projects when delete project document', async () => {
         const insertedProjectRes = await request(app.express).post('/projects').auth(JWTMocks.user_1, { type: 'bearer' }).send(projectMocks.authorizedProject)
         await request(app.express).delete(`/projects/${insertedProjectRes.body._id}`).auth(JWTMocks.user_1, { type: 'bearer' })
-        const userRes = await request(app.express).get(`/users/${insertedProjectRes.body.creator.userID}?uid=true`).auth(JWTMocks.user_1, { type: 'bearer' })
+        const userRes = await request(app.express).get(`/users/${insertedProjectRes.body.creator.uid}?uid=true`).auth(JWTMocks.user_1, { type: 'bearer' })
         
         expect(_.some(userRes.body.projects,{ name: insertedProjectRes.body.name , projectID: insertedProjectRes.body._id})).not.toBe(true)
     })

@@ -17,7 +17,7 @@ module.exports = {
         if (!(Number.isInteger(page) && Number.isInteger(limit))) return res.status(400).send('PAGE AND LIMIT PARAMETERS MUST BE NUMBERS')
 
         // Perform the operation and return its result
-        const projects = await paginate(Project, { ...req.ODataFilter, "creator.userID": req.decodedIdToken?.uid }, req.ODataSort, { page, limit })
+        const projects = await paginate(Project, { ...req.ODataFilter, "creator.uid": req.decodedIdToken?.uid }, req.ODataSort, { page, limit })
         
         return res.json(projects)
     },
@@ -29,7 +29,7 @@ module.exports = {
         if (!project) return res.status(404).send('project dont exist')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== project.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== project.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // If it is authorized, perform the operation and return its result
         return res.json(project)
@@ -39,7 +39,7 @@ module.exports = {
     async store(req: Request<any, ProjectDataType, ProjectDataType>, res: Response) {
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== req.body.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== req.body.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // Checks if the project airfoils and runs exists and are consistent with database values
         for (const projectAirfoil of req.body.airfoils) {
@@ -66,7 +66,7 @@ module.exports = {
         const project = await Project.create(req.body);
         // If succeed in adding the project, update users project to reflect addition
         if (project) {
-            await User.findOneAndUpdate({ uid: project.creator.userID }, { $addToSet: { projects: { name: project.name, projectID: project.id } } }, { useFindAndModify: false })
+            await User.findOneAndUpdate({ uid: project.creator.uid }, { $addToSet: { projects: { name: project.name, projectID: project.id } } }, { useFindAndModify: false })
         }
         // Return value added
         return res.json(project)
@@ -80,7 +80,7 @@ module.exports = {
         if (!project) return res.status(404).send('project dont exist')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== project.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== project.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // Checks if it's trying to change creator field
         if (!lodash.isEqualWith(req.body.creator, project.creator)) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION! NOT ALLOWED TO CHANGE DOCUMENT CREATOR')
@@ -116,7 +116,7 @@ module.exports = {
 
         // If changes the project.name, then update projects array in creator User
         if (project_new.name !== project.name) {
-            await User.findOneAndUpdate({ _id: project_new.creator.userID }, { $set: { "projects.$.name": project_new.name } }, { useFindAndModify: false })
+            await User.findOneAndUpdate({ _id: project_new.creator.uid }, { $set: { "projects.$.name": project_new.name } }, { useFindAndModify: false })
         }
 
         // Return value updated
@@ -132,14 +132,14 @@ module.exports = {
         if (!project) return res.status(404).send('project dont exist')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== project.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== project.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // If it is authorized, perform the operation and return its result
         const project_deleted = await Project.findByIdAndDelete(req.params.id)
 
         // If succeed in deleting the project, update users project to reflect deletion
         if (project_deleted) {
-            await User.findOneAndUpdate({ uid: project_deleted.creator.userID }, { $pull: { projects: { name: project_deleted.name, projectID: project_deleted.id } } }, { useFindAndModify: false })
+            await User.findOneAndUpdate({ uid: project_deleted.creator.uid }, { $pull: { projects: { name: project_deleted.name, projectID: project_deleted.id } } }, { useFindAndModify: false })
         }
 
         res.send()

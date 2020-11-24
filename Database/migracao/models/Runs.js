@@ -56,7 +56,7 @@ const RunsMongoSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        userID: {
+        uid: {
             type: String,
             required: true,
         }

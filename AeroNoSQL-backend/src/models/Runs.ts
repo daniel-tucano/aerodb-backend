@@ -29,7 +29,7 @@ export interface RunDataType extends Document {
     creator: {
         name: string,
         userName: string,
-        userID: string
+        uid: string
     },
     postedDate: Date,
 }
@@ -90,7 +90,7 @@ const RunsMongoSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        userID: {
+        uid: {
             type: String,
             required: true,
         }

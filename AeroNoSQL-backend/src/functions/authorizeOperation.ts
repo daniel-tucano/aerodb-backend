@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import app from '../../app'
 
 // Verify if the resource belongs to the client who made the request
-const verifyOwnership = async (idToken: string, userID: string): Promise<boolean> => {
+const verifyOwnership = async (idToken: string, uid: string): Promise<boolean> => {
 
     let isOwner = Boolean()
 
@@ -10,9 +10,9 @@ const verifyOwnership = async (idToken: string, userID: string): Promise<boolean
 
         // Checks if the auth JWT was signed correctly
         const decodedIdToken = await app.fireApp.auth().verifyIdToken(idToken)
-        isOwner = decodedIdToken.uid === userID
+        isOwner = decodedIdToken.uid === uid
         // console.log(decodedIdToken.uid)
-        // console.log(userID)
+        // console.log(uid)
         // console.log(`inside resource.creator, isOwner: ${isOwner}`)
 
         return isOwner
@@ -37,7 +37,7 @@ const authorizeOperation: authorizeOperationType =  async function (req: Request
     // Verifify if some authorization token was send with the request
     if (req.token) {
         // Verify if the client own the resource
-        isOwner = await verifyOwnership(req.token, req.body.creator.userID)
+        isOwner = await verifyOwnership(req.token, req.body.creator.uid)
 
         if (isOwner) {
             // If the client own the resource it is authorized to do the operation

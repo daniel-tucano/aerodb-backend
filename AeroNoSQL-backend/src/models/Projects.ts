@@ -5,7 +5,7 @@ export interface ProjectDataType extends Document {
     creator: {
         name: string,
         userName: string,
-        userID: string
+        uid: string
     },
     name: string,
     airfoils: SelectionAirfoilDataType[],
@@ -34,7 +34,7 @@ const ProjectMongoSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        userID: {
+        uid: {
             type: String,
             required: true,
         }

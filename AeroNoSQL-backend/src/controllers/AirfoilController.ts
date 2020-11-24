@@ -31,7 +31,7 @@ module.exports = {
     async store(req: Request<any, any, AirfoilDataType>, res: Response) {
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== req.body.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== req.body.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // Obtain the counter wich will be the new airfoilID
         const airfoilCounter = await Counter.findOneAndUpdate({ refCollection: "Airfoils" }, { $inc: { counter: 1 } }, { new: true, useFindAndModify: false })
@@ -51,7 +51,7 @@ module.exports = {
 
         // If successfully add the airfoil, then add it to user airfoils
         if (airfoil) {
-            await User.findOneAndUpdate({ uid: airfoil.creator.userID }, { $addToSet: { userAirfoils: airfoil.airfoilID } }, { useFindAndModify: false })
+            await User.findOneAndUpdate({ uid: airfoil.creator.uid }, { $addToSet: { userAirfoils: airfoil.airfoilID } }, { useFindAndModify: false })
         }
 
         // Return value added
@@ -67,7 +67,7 @@ module.exports = {
         if (!airfoil) return res.status(404).send('AIRFOIL NOT FOUND')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== airfoil.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== airfoil.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // Checks if it's trying to change creator field
         if (!lodash.isEqual(req.body.creator, airfoil.creator)) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION! NOT ALLOWED TO CHANGE DOCUMENT CREATOR')
@@ -87,14 +87,14 @@ module.exports = {
         if (!airfoil) return res.status(404).send('AIRFOIL NOT FOUND')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== airfoil.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== airfoil.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // If it is authorized, perform the operation and return its result
         const airfoil_deleted = await Airfoil.findOneAndDelete({ airfoilID: Number(req.params.id) })
 
         // If successfully deleted the airfoil, then uptdate user to reflect deletion
         if (airfoil_deleted) {
-            await User.findOneAndUpdate({ uid: airfoil.creator.userID }, { $pull: { userAirfoils: airfoil_deleted.airfoilID } }, { useFindAndModify: false })
+            await User.findOneAndUpdate({ uid: airfoil.creator.uid }, { $pull: { userAirfoils: airfoil_deleted.airfoilID } }, { useFindAndModify: false })
         }
 
         return res.send()

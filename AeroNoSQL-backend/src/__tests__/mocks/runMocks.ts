@@ -27,7 +27,7 @@ export default {
         creator: {
             name: "mock user",
             userName: "@mockUser",
-            userID: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
+            uid: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
         }
     },
 
@@ -59,7 +59,7 @@ export default {
         creator: {
             name: "mock user",
             userName: "@mockUser",
-            userID: "123"
+            uid: "123"
         }
     },
 
@@ -91,7 +91,7 @@ export default {
         creator: {
             name: "mock user",
             userName: "@mockUser",
-            userID: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
+            uid: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
         }
     },
 
@@ -123,7 +123,7 @@ export default {
         creator: {
             name: "mocking bird user",
             userName: "@mockingBirdUser",
-            userID: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
+            uid: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
         }
     },
     
@@ -155,7 +155,7 @@ export default {
         creator: {
             name: "mock user",
             userName: "@mockUser",
-            userID: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
+            uid: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2"
         }
     }
 }

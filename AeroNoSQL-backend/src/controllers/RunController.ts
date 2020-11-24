@@ -29,7 +29,7 @@ module.exports = {
     async store(req: Request<any, RunDataType, RunDataType>, res: Response) {
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== req.body.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== req.body.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // Checks if the airfoil exists in the database
         const airfoil = await Airfoil.findOne({ airfoilID: req.body.airfoilID }, {}, { lean: true })
@@ -64,7 +64,7 @@ module.exports = {
     async update(req: Request<any, RunDataType, RunDataType>, res: Response) {
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== req.body.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== req.body.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // Reading the resource current value
         let run = await Run.findOne({ runID: Number(req.params.id) }, {}, { lean: true })
@@ -73,7 +73,7 @@ module.exports = {
         if (!run) return res.status(404).send('run dont exist')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== run.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== run.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // Checks if it's trying to change creator field
         if (!lodash.isEqual(req.body.creator, run.creator)) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION! NOT ALLOWED TO CHANGE DOCUMENT CREATOR')
@@ -93,7 +93,7 @@ module.exports = {
         if (!run) return res.status(404).send('run dont exist')
 
         // Checks if the operation is authorized
-        if (req.decodedIdToken?.uid !== run.creator.userID) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
+        if (req.decodedIdToken?.uid !== run.creator.uid) return res.status(401).send('CLIENT NOT AUTHORIZED TO PERFORM OPERATION')
 
         // If it is authorized, perform the operation and return its result
         const run_deleted = await Run.findOneAndDelete({ runID: Number(req.params.id) }, { useFindAndModify: false } as QueryFindOneAndRemoveOptions)

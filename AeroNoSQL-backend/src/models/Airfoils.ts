@@ -18,7 +18,7 @@ export interface AirfoilDataType extends Document {
     creator: {
         name: string,
         userName: string,
-        userID: string
+        uid: string
     },
     postedDate: Date,
     runs: {
@@ -79,7 +79,7 @@ const AirfoilsMongoSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        userID: {
+        uid: {
             type: String,
             required: true,
         }

@@ -52,7 +52,7 @@ const AirfoilsMongoSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        userID: {
+        uid: {
             type: String,
             required: true,
         }

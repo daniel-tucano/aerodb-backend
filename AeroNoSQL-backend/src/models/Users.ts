@@ -14,7 +14,7 @@ export interface UserDataType extends Document {
         projectID: string
     }[],
     userAirfoils: number[],
-    favoriteAirfoils: string[],
+    favoriteAirfoils: number[],
 } 
 
 const UserMongoSchema = new mongoose.Schema({
@@ -55,7 +55,7 @@ const UserMongoSchema = new mongoose.Schema({
         projectID: String
     }],
     userAirfoils: [Number],
-    favoriteAirfoils: [String],
+    favoriteAirfoils: [Number],
 })
 
 export default mongoose.model<UserDataType>('User',UserMongoSchema)

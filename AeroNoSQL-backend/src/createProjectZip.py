@@ -5,6 +5,7 @@ import sys
 import base64
 import requests
 from re import sub
+from scipy.io import savemat
 
 # Load enviroment variables if not in production enviroment
 if ('NODE_ENV' in os.environ):
@@ -66,7 +67,7 @@ if request_args and 'airfoil' in request_args:
         id = id.replace('id=','')
         runs = runs.replace('runs=','')
         runs = runs.split(';')
-        airfoilData = requests.get('http://'+os.environ['AERODB_BACKEND_LOADBALANCER_SERVICE_HOST']+'/airfoils/'+id, timeout=4.0).json()
+        airfoilData = requests.get('http://'+os.environ['AERODB_BACKEND_LOADBALANCER_SERVICE_HOST']+'/airfoils/'+id, timeout=5.0).json()
         airfoilData.pop('creator',None)
         airfoilData.pop('postedDate',None)
         airfoilData.pop('fileName',None)
@@ -75,23 +76,41 @@ if request_args and 'airfoil' in request_args:
         os.mkdir(camelCase(airfoilData['nameLowerCase']))
         os.chdir(camelCase(airfoilData['nameLowerCase']))
 
-        airfoilFileName = camelCase(airfoilData['nameLowerCase'])+'.json'
-        airfoilFileVar = open(airfoilFileName, 'w+')
-        airfoilFileVar.write(json.dumps(airfoilData, indent=4))
-        airfoilFileVar.close()
+        # If airfoil file extension is provided as 'mat' then make mat files, otherwise make json files 
+        if 'airfoilFileExtension' in request_args and request_args['airfoilFileExtension'].lower() == 'mat':
+            airfoilFileName = camelCase(airfoilData['nameLowerCase'])+'.mat'
+            savemat(airfoilFileName, mdict=airfoilData)
+        else:
+            airfoilFileName = camelCase(airfoilData['nameLowerCase'])+'.json'
+            airfoilFileVar = open(airfoilFileName, 'w+')
+            airfoilFileVar.write(json.dumps(airfoilData, indent=4))
+            airfoilFileVar.close()       
 
+        # If some value in the runs provided is 'all' then include all airfoilruns in the array
+        if 'all' in runs :
+            runs = airfoilData['runs']['runIDs']
+
+        print(runs)
+            
         os.mkdir('runs')
         os.chdir('runs')
         for run in runs:
-            runData = requests.get('http://'+os.environ['AERODB_BACKEND_LOADBALANCER_SERVICE_HOST']+'/runs/'+run, timeout=4.0).json()
+            run = str(run)
+            runData = requests.get('http://'+os.environ['AERODB_BACKEND_LOADBALANCER_SERVICE_HOST']+'/runs/'+run, timeout=5.0).json()
             runData.pop('airfoil',None)
             runData.pop('creator',None)
             runData.pop('_id',None)
             runData.pop('runDate',None)
 
-            runFileVar = open('Run'+run+'.json', 'w+')
-            runFileVar.write(json.dumps(runData, indent= 4))
-            runFileVar.close()
+            # If run file extension is provided as 'mat' then make mat files, otherwise make json files 
+            if 'runFileExtension' in request_args and request_args['runFileExtension'] == 'mat':
+                runFileName = 'Run'+run+'.mat'
+                savemat(runFileName, mdict=runData)
+            else:
+                runFileName = 'Run'+run+'.json'
+                runFileVar = open(runFileName, 'w+')
+                runFileVar.write(json.dumps(runData, indent= 4))
+                runFileVar.close()
         os.chdir('../')
         os.chdir('../')
 

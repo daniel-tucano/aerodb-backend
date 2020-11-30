@@ -3,6 +3,8 @@
 /Database/migracao/teste_mongoose.js
 /Database/migracao/.env
 /Database/mongodb-secrets.yaml
+/Database/mongodb-loadbalancer.yaml
+/Database/important_commands.txt
 /AeroNoSQL-backend/node_modules
 /AeroNoSQL-backend/build
 /AeroNoSQL-backend/.env

@@ -3,12 +3,21 @@ import mongoose, { Document } from "mongoose"
 export interface UserDataType extends Document {
     uid: string,
     name: string,
+    surname: string,
     userName: string,
     email: string,
     gender: string,
     yearOfBirth: Date,
     institution?: string,
     about: string,
+    socialNetworks: {
+        facebook?: string,
+        twitter?: string,
+        github?: string,
+        linkedin?: string,
+    },
+    backgroundImgUrl?: string,
+    profileImgUrl?: string,
     projects: {
         name: string,
         projectID: string
@@ -25,6 +34,10 @@ const UserMongoSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+    },
+    surname: {
+        type: String,
+        required: true
     },
     userName: {
         type: String,
@@ -49,6 +62,34 @@ const UserMongoSchema = new mongoose.Schema({
     about: {
         type: String,
         required: true
+    },
+    socialNetworks: {
+        type: mongoose.SchemaTypes.Map,
+        required: true,
+        facebook: {
+            type: String,
+            required: false
+        },
+        twitter: {
+            type: String,
+            required: false
+        },
+        github: {
+            type: String,
+            required: false
+        },
+        linkedin: {
+            type: String,
+            required: false
+        },
+    },
+    backgroundImgUrl: {
+        type: String,
+        required: false,
+    },
+    profileImgUrl: {
+        type: String,
+        required: false
     },
     projects: [{
         name: String,

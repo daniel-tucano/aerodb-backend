@@ -9,6 +9,10 @@ const UserMongoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    surname: {
+        type: String,
+        required: true
+    },
     userName: {
         type: String,
         required: true,
@@ -33,12 +37,40 @@ const UserMongoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    socialNetworks: {
+        type: mongoose.SchemaTypes.Map,
+        required: true,
+        facebook: {
+            type: String,
+            required: false
+        },
+        twitter: {
+            type: String,
+            required: false
+        },
+        github: {
+            type: String,
+            required: false
+        },
+        linkedin: {
+            type: String,
+            required: false
+        },
+    },
+    backgroundImgUrl: {
+        type: String,
+        required: false,
+    },
+    profileImgUrl: {
+        type: String,
+        required: false
+    },
     projects: [{
         name: String,
         projectID: String
     }],
     userAirfoils: [Number],
-    favoriteAirfoils: [String],
+    favoriteAirfoils: [Number],
 })
 
 mongoose.model('User',UserMongoSchema)

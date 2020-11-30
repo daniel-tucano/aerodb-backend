@@ -1,12 +1,21 @@
 const baseUser = {
     uid: "jiy2AEaXb2WV3MI3hYhWEdyFRgC2",
     name: "mock name",
+    surname: "mock surname",
     userName: "@mockUserName",
     email: "user@example.com'",
     gender: "male",
     yearOfBirth: new Date(1999, 2, 8, 0, 0, 0, 0),
     institution: "mock institution",
     about: "mock about",
+    socialNetworks: {
+        facebook: "facebook.com/mockFacebook",
+        twitter: "twitter.com/mockTwitter",
+        github: "gihub.com/mockGithub",
+        linkedin: "linkedin.com/mockLinkedin"
+    },
+    backgroundImgUrl: "https://miro.medium.com/max/700/1*92adf06PCF91kCYu1nPLQg.jpeg",
+    profileImgUrl: "https://lh3.googleusercontent.com/ogw/ADGmqu-KvG4tQiXYmFk6tmbvWkC0oUs9ZSCZ7XzLrGjK=s83-c-mo",
     projects: [],
     userAirfoils: [],
     favoriteAirfoils: []

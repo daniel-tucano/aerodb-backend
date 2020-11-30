@@ -17,7 +17,7 @@ module.exports = {
     },
 
     async show(req: Request, res: Response) {
-        const { uid = false } = req.query
+        const { uid = true } = req.query
 
         const user = uid ? await User.findOne({ uid: req.params.id }) : await User.findById(req.params.id)
 
@@ -31,7 +31,9 @@ module.exports = {
     },
 
     async update(req: Request, res: Response) {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, useFindAndModify: false })
+        const { uid = true } = req.query
+
+        const user = uid ? await User.findOneAndUpdate({ uid: req.params.id }, req.body, { new: true, useFindAndModify: false }) : await User.findByIdAndUpdate(req.params.id, req.body, { new: true, useFindAndModify: false })
 
         if (!user) return res.status(404).send("USER DON'T EXISTS")
 
@@ -39,7 +41,9 @@ module.exports = {
     },
 
     async destroy(req: Request, res: Response) {
-        const user = await User.findByIdAndRemove(req.params.id)
+        const { uid = true } = req.query
+
+        const user = uid ? await User.findOneAndRemove({ uid: req.params.id}) : await User.findByIdAndRemove(req.params.id)
 
         if (!user) return res.status(404).send("USER DON'T EXISTS")
 

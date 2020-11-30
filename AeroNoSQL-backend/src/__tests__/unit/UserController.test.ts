@@ -50,7 +50,7 @@ describe('UserController tests', () => {
 
     it('Should delete user document', async () => {
         const insertedUserRes = await request(app.express).post('/users').auth(JWTMocks.user_1, { type: 'bearer' }).send(userMocks.user)
-        const res = await request(app.express).delete(`/users/${insertedUserRes.body._id}`).auth(JWTMocks.user_1, { type: 'bearer' })
+        const res = await request(app.express).delete(`/users/${insertedUserRes.body.uid}`).auth(JWTMocks.user_1, { type: 'bearer' })
         
         expect(res.status).toBe(200)
     })
@@ -63,14 +63,14 @@ describe('UserController tests', () => {
     
     it('Should unauthorize to delete user document', async () => {
         const insertedUserRes = await request(app.express).post('/users').auth(JWTMocks.user_1, { type: 'bearer' }).send(userMocks.user)
-        const res = await request(app.express).delete(`/users/${insertedUserRes.body._id}`).auth(JWTMocks.user_2, { type: 'bearer' })
+        const res = await request(app.express).delete(`/users/${insertedUserRes.body.uid}`).auth(JWTMocks.user_2, { type: 'bearer' })
         
         expect(res.status).toBe(200)
     })
     
     it('Should update user document', async () => {
         const insertedUserRes = await request(app.express).post('/users').auth(JWTMocks.user_1, { type: 'bearer' }).send(userMocks.user)
-        const res = await request(app.express).put(`/users/${insertedUserRes.body._id}`).auth(JWTMocks.user_1, { type: 'bearer' }).send(userMocks.updatedUser)
+        const res = await request(app.express).put(`/users/${insertedUserRes.body.uid}`).auth(JWTMocks.user_1, { type: 'bearer' }).send(userMocks.updatedUser)
         
         res.body.yearOfBirth = new Date(res.body.yearOfBirth)
 

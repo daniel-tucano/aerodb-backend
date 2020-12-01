@@ -43,7 +43,7 @@ export const paginate = async (Model: Model<any>, query: FilterQuery<any>, sort:
         paginationResult.docs = await Model.find(query).limit(limit).skip((page-1)*offset).lean(true).exec()
     }
 
-    if (query) {
+    if (query && Object.keys(query).length > 0) {
         paginationResult.totalDocs = await Model.countDocuments(query)
     } else {
         paginationResult.totalDocs = await Model.estimatedDocumentCount()

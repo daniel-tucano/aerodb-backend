@@ -7,8 +7,7 @@ import { paginate } from "../functions/paginate";
 module.exports = {
   async index(req: Request, res: Response) {
     let { page = 1, limit = 10 } = req.query;
-    const estimatedDocumentCount =
-      req.params.estimatedDocumentCount !== "false";
+    const estimatedDocumentCount = req.query.estimatedDocumentCount !== "false";
     page = Number(page);
     limit = Number(limit);
 

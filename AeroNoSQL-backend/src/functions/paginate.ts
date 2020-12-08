@@ -47,9 +47,9 @@ export const paginate = async (
     for (const sortObj of sort) {
       findQuery.sort(sortObj);
     }
-    console.time("tempo para buscar documentos");
+    // console.time("tempo para buscar documentos");
     paginationResult.docs = await findQuery.exec();
-    console.timeEnd("tempo para buscar documentos");
+    // console.timeEnd("tempo para buscar documentos");
   } else {
     paginationResult.docs = await Model.find(query)
       .limit(limit)
@@ -59,9 +59,9 @@ export const paginate = async (
   }
 
   if (estimatedDocumentCount) {
-    console.time("tempo para contar quantos dumentos na busca");
+    // console.time("tempo para contar quantos dumentos na busca");
     paginationResult.totalDocs = await Model.estimatedDocumentCount(query);
-    console.timeEnd("tempo para contar quantos dumentos na busca");
+    // console.timeEnd("tempo para contar quantos dumentos na busca");
   } else {
     paginationResult.totalDocs = await Model.countDocuments(query);
   }

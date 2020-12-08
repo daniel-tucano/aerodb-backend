@@ -8,10 +8,10 @@ import { QueryFindOneAndRemoveOptions } from "mongoose";
 
 module.exports = {
   async index(req: Request, res: Response) {
-    let { page = 1, limit = 10, estimatedDocumentCount = true } = req.query;
+    let { page = 1, limit = 10 } = req.query;
+    const estimatedDocumentCount = req.query.estimatedDocumentCount !== "false";
     page = Number(page);
     limit = Number(limit);
-    estimatedDocumentCount = estimatedDocumentCount !== "false";
 
     // Checks if page and limit query parameters are valid
     if (!(Number.isInteger(page) && Number.isInteger(limit)))

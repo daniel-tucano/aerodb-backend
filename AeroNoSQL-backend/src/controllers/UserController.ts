@@ -77,8 +77,8 @@ module.exports = {
   },
 
   async uploadProfileImg(req: Request, res: Response) {
-    const uid = req.params.uid !== "false";
-    const original = req.params.original !== "false";
+    const uid = req.query.uid !== "false";
+    const original = req.query.original !== "false";
 
     if (req.params.id !== req.decodedIdToken?.uid)
       return res.status(401).send("CLIENT NOT AUTHORIZED TO PERFORM OPERATION");
@@ -125,8 +125,8 @@ module.exports = {
     return res.status(200).send(url);
   },
   async uploadBackgroundImg(req: Request, res: Response) {
-    const uid = req.params.uid !== "false";
-    const original = req.params.original !== "false";
+    const uid = req.query.uid !== "false";
+    const original = req.query.original !== "false";
 
     if (req.params.id !== req.decodedIdToken?.uid)
       return res.status(401).send("CLIENT NOT AUTHORIZED TO PERFORM OPERATION");

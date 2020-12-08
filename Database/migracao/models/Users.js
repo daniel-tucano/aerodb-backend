@@ -61,7 +61,15 @@ const UserMongoSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    originalBackgroundImgUrl: {
+        type: String,
+        required: false,
+    },
     profileImgUrl: {
+        type: String,
+        required: false
+    },
+    originalProfileImgUrl: {
         type: String,
         required: false
     },

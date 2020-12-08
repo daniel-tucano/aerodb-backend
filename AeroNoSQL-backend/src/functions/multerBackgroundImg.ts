@@ -7,13 +7,12 @@ const multerConfig: Options = {
     destination: (_req, _file, cd) => {
       cd(null, "/tmp");
     },
-    filename: (req, _file, cb) => {
-      let { original = false } = req.query;
-      original = original !== "false";
+    filename: (req, file, cb) => {
+      const original = req.query.original !== "false";
 
-      const filename = `${req.params.id}-${
-        original && "original"
-      }-background-image`;
+      const filename = `${req.params.id}${
+        original ? "-original" : ""
+      }-background-image.${file.mimetype.replace("image/", "")}`;
       cb(null, filename);
     },
   }),

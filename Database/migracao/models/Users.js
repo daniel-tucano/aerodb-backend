@@ -61,7 +61,7 @@ const UserMongoSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    originalBackgroundImgUrl: {
+    originalBackgroundImgPath: {
         type: String,
         required: false,
     },
@@ -69,7 +69,7 @@ const UserMongoSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    originalProfileImgUrl: {
+    originalProfileImgPath: {
         type: String,
         required: false
     },

@@ -17,9 +17,9 @@ export interface UserDataType extends Document {
     linkedin?: string;
   };
   backgroundImgUrl?: string;
-  originalBackgroundImgUrl?: string;
+  originalBackgroundImgPath?: string;
   profileImgUrl?: string;
-  originalProfileImgUrl?: string;
+  originalProfileImgPath?: string;
   projects: {
     name: string;
     projectID: string;
@@ -89,7 +89,7 @@ const UserMongoSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  originalBackgroundImgUrl: {
+  originalBackgroundImgPath: {
     type: String,
     required: false,
   },
@@ -97,7 +97,7 @@ const UserMongoSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  originalProfileImgUrl: {
+  originalProfileImgPath: {
     type: String,
     required: false,
   },

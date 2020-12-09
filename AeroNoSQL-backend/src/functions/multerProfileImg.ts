@@ -12,7 +12,7 @@ const multerConfig: Options = {
 
       const filename = `${req.params.id}${
         original ? "-original" : ""
-      }-profile-image.${file.mimetype.replace("image/", "")}`;
+      }-profile-image`;
       cb(null, filename);
     },
   }),

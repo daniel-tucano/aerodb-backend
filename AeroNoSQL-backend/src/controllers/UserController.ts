@@ -105,7 +105,11 @@ module.exports = {
     const user = uid
       ? await User.findOneAndUpdate(
           { uid: req.params.id },
-          { [original ? "originalProfileImgUrl" : "profileImgUrl"]: url },
+          {
+            [original ? "originalProfileImgPath" : "profileImgUrl"]: original
+              ? `${req.params.id}/${req.file.filename}`
+              : url,
+          },
           {
             new: true,
             useFindAndModify: false,
@@ -113,7 +117,11 @@ module.exports = {
         )
       : await User.findByIdAndUpdate(
           req.params.id,
-          { [original ? "originalProfileImgUrl" : "profileImgUrl"]: url },
+          {
+            [original ? "originalProfileImgPath" : "profileImgUrl"]: original
+              ? `${req.params.id}/${req.file.filename}`
+              : url,
+          },
           {
             new: true,
             useFindAndModify: false,
@@ -153,7 +161,13 @@ module.exports = {
     const user = uid
       ? await User.findOneAndUpdate(
           { uid: req.params.id },
-          { [original ? "originalBackgroundImgUrl" : "backgroundImgUrl"]: url },
+          {
+            [original
+              ? "originalBackgroundImgPath"
+              : "backgroundImgUrl"]: original
+              ? `${req.params.id}/${req.file.filename}`
+              : url,
+          },
           {
             new: true,
             useFindAndModify: false,
@@ -161,7 +175,13 @@ module.exports = {
         )
       : await User.findByIdAndUpdate(
           req.params.id,
-          { [original ? "originalBackgroundImgUrl" : "backgroundImgUrl"]: url },
+          {
+            [original
+              ? "originalBackgroundImgPath"
+              : "backgroundImgUrl"]: original
+              ? `${req.params.id}/${req.file.filename}`
+              : url,
+          },
           {
             new: true,
             useFindAndModify: false,

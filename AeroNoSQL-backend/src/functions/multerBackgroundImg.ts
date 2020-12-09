@@ -12,7 +12,7 @@ const multerConfig: Options = {
 
       const filename = `${req.params.id}${
         original ? "-original" : ""
-      }-background-image.${file.mimetype.replace("image/", "")}`;
+      }-background-image`;
       cb(null, filename);
     },
   }),

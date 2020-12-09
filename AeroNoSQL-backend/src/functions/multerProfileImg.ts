@@ -7,7 +7,7 @@ const multerConfig: Options = {
     destination: (_req, _file, cd) => {
       cd(null, "/tmp");
     },
-    filename: (req, file, cb) => {
+    filename: (req, _file, cb) => {
       const original = req.query.original !== "false";
 
       const filename = `${req.params.id}${

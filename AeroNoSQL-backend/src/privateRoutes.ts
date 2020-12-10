@@ -1,6 +1,5 @@
 import express from "express";
-import multerProfileImg from "./functions/multerProfileImg";
-import multerBackgroundImg from "./functions/multerBackgroundImg";
+import multerImg from "./functions/multerImg";
 const privateRoutes = express.Router();
 
 const AirfoilsController = require("./controllers/AirfoilController");
@@ -24,12 +23,12 @@ privateRoutes.put("/users/:id", UserController.update);
 privateRoutes.delete("/users/:id", UserController.destroy);
 privateRoutes.post(
   "/users/upload/profile-image/:id",
-  multerProfileImg(),
+  multerImg("profile-image"),
   UserController.uploadProfileImg
 );
 privateRoutes.post(
   "/users/upload/background-image/:id",
-  multerBackgroundImg(),
+  multerImg("background-image"),
   UserController.uploadBackgroundImg
 );
 

@@ -83,15 +83,58 @@ module.exports = {
     if (req.params.id !== req.decodedIdToken?.uid)
       return res.status(401).send("CLIENT NOT AUTHORIZED TO PERFORM OPERATION");
 
+    // Obtain current user data
+    const currentUserData = uid
+      ? await User.findOne({ uid: req.params.id as string })
+      : await User.findById(req.params.id);
+
+    if (!currentUserData) return res.status(404).send("USER DON'T EXISTS");
+
+    const uploadedFilePath = `${req.params.id}/${req.file.filename}`;
+
+    // Delete file if it exists and the path propertie exists
+    if (original) {
+      currentUserData.originalProfileImgPath &&
+        admin
+          .storage()
+          .bucket()
+          .file(currentUserData.originalProfileImgPath)
+          .delete()
+          .then(() => {
+            console.log(`${currentUserData.originalProfileImgPath} deleted`);
+          })
+          .catch(() => {
+            console.log(
+              `${currentUserData.originalProfileImgPath} was not deleted`
+            );
+          });
+    } else {
+      currentUserData.profileImg &&
+        currentUserData.profileImg.path &&
+        admin
+          .storage()
+          .bucket()
+          .file(currentUserData.profileImg.path)
+          .delete()
+          .then(() => {
+            console.log(`${currentUserData.profileImg?.path} deleted`);
+          })
+          .catch(() => {
+            console.log(`${currentUserData.profileImg?.path} was not deleted`);
+          });
+    }
+
+    // Upload file to the cloud
     const uploadResponse = await admin
       .storage()
       .bucket()
       .upload(req.file.path, {
-        destination: `${req.params.id}/${req.file.filename}`,
+        destination: uploadedFilePath,
       });
 
     console.log(`${req.file.filename} uploaded to cloud.`);
 
+    // Delete file from local storage
     fs.unlink(req.file.path, (err) => {
       err
         ? console.log(err)
@@ -100,35 +143,24 @@ module.exports = {
 
     await uploadResponse[0].makePublic();
 
-    const url = `https://storage.googleapis.com/aero-no-sql-dev.appspot.com/${req.params.id}/${req.file.filename}`;
+    const url = `https://storage.googleapis.com/aero-no-sql-dev.appspot.com/${req.params.id}%2F${req.file.filename}`;
 
-    const user = uid
-      ? await User.findOneAndUpdate(
-          { uid: req.params.id },
-          {
-            [original ? "originalProfileImgPath" : "profileImgUrl"]: original
-              ? `${req.params.id}/${req.file.filename}`
-              : url,
-          },
-          {
-            new: true,
-            useFindAndModify: false,
-          }
-        )
-      : await User.findByIdAndUpdate(
-          req.params.id,
-          {
-            [original ? "originalProfileImgPath" : "profileImgUrl"]: original
-              ? `${req.params.id}/${req.file.filename}`
-              : url,
-          },
-          {
-            new: true,
-            useFindAndModify: false,
-          }
-        );
+    // Data to be updated on user to reflect the new image upload
+    const updateData = {
+      ...(original
+        ? { originalProfileImgPath: uploadedFilePath }
+        : { profileImg: { url, path: uploadedFilePath } }),
+    };
 
-    if (!user) return res.status(404).send("USER DON'T EXISTS");
+    uid
+      ? await User.findOneAndUpdate({ uid: req.params.id }, updateData, {
+          new: true,
+          useFindAndModify: false,
+        })
+      : await User.findByIdAndUpdate(req.params.id, updateData, {
+          new: true,
+          useFindAndModify: false,
+        });
 
     return res.status(200).send(url);
   },
@@ -139,15 +171,60 @@ module.exports = {
     if (req.params.id !== req.decodedIdToken?.uid)
       return res.status(401).send("CLIENT NOT AUTHORIZED TO PERFORM OPERATION");
 
+    // Obtain current user data
+    const currentUserData = uid
+      ? await User.findOne({ uid: req.params.id as string })
+      : await User.findById(req.params.id);
+
+    if (!currentUserData) return res.status(404).send("USER DON'T EXISTS");
+
+    const uploadedFilePath = `${req.params.id}/${req.file.filename}`;
+
+    // Delete file if it exists and the path propertie exists
+    if (original) {
+      currentUserData.originalBackgroundImgPath &&
+        admin
+          .storage()
+          .bucket()
+          .file(currentUserData.originalBackgroundImgPath)
+          .delete()
+          .then(() => {
+            console.log(`${currentUserData.originalBackgroundImgPath} deleted`);
+          })
+          .catch(() => {
+            console.log(
+              `${currentUserData.originalBackgroundImgPath} was not deleted`
+            );
+          });
+    } else {
+      currentUserData.backgroundImg &&
+        currentUserData.backgroundImg.path &&
+        admin
+          .storage()
+          .bucket()
+          .file(currentUserData.backgroundImg.path)
+          .delete()
+          .then(() => {
+            console.log(`${currentUserData.backgroundImg?.path} deleted`);
+          })
+          .catch(() => {
+            console.log(
+              `${currentUserData.backgroundImg?.path} was not deleted`
+            );
+          });
+    }
+
+    // Upload file to the cloud
     const uploadResponse = await admin
       .storage()
       .bucket()
       .upload(req.file.path, {
-        destination: `${req.params.id}/${req.file.filename}`,
+        destination: uploadedFilePath,
       });
 
     console.log(`${req.file.filename} uploaded to cloud.`);
 
+    // Delete file from local storage
     fs.unlink(req.file.path, (err) => {
       err
         ? console.log(err)
@@ -156,39 +233,24 @@ module.exports = {
 
     await uploadResponse[0].makePublic();
 
-    const url = `https://storage.googleapis.com/aero-no-sql-dev.appspot.com/${req.params.id}/${req.file.filename}`;
+    const url = `https://storage.googleapis.com/aero-no-sql-dev.appspot.com/${req.params.id}%2F${req.file.filename}`;
 
-    const user = uid
-      ? await User.findOneAndUpdate(
-          { uid: req.params.id },
-          {
-            [original
-              ? "originalBackgroundImgPath"
-              : "backgroundImgUrl"]: original
-              ? `${req.params.id}/${req.file.filename}`
-              : url,
-          },
-          {
-            new: true,
-            useFindAndModify: false,
-          }
-        )
-      : await User.findByIdAndUpdate(
-          req.params.id,
-          {
-            [original
-              ? "originalBackgroundImgPath"
-              : "backgroundImgUrl"]: original
-              ? `${req.params.id}/${req.file.filename}`
-              : url,
-          },
-          {
-            new: true,
-            useFindAndModify: false,
-          }
-        );
+    // Data to be updated on user to reflect the new image upload
+    const updateData = {
+      ...(original
+        ? { originalBackgroundImgPath: uploadedFilePath }
+        : { backgroundImg: { url, path: uploadedFilePath } }),
+    };
 
-    if (!user) return res.status(404).send("USER DON'T EXISTS");
+    uid
+      ? await User.findOneAndUpdate({ uid: req.params.id }, updateData, {
+          new: true,
+          useFindAndModify: false,
+        })
+      : await User.findByIdAndUpdate(req.params.id, updateData, {
+          new: true,
+          useFindAndModify: false,
+        });
 
     return res.status(200).send(url);
   },

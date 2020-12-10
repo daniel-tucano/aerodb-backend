@@ -16,9 +16,15 @@ export interface UserDataType extends Document {
     github?: string;
     linkedin?: string;
   };
-  backgroundImgUrl?: string;
+  backgroundImg?: {
+    path?: string;
+    url?: string;
+  };
+  profileImg?: {
+    path?: string;
+    url?: string;
+  };
   originalBackgroundImgPath?: string;
-  profileImgUrl?: string;
   originalProfileImgPath?: string;
   projects: {
     name: string;
@@ -85,16 +91,30 @@ const UserMongoSchema = new mongoose.Schema({
       required: false,
     },
   },
-  backgroundImgUrl: {
-    type: String,
+  backgroundImg: {
+    path: {
+      type: String,
+      required: false,
+    },
+    url: {
+      type: String,
+      required: false,
+    },
     required: false,
   },
   originalBackgroundImgPath: {
     type: String,
     required: false,
   },
-  profileImgUrl: {
-    type: String,
+  profileImg: {
+    path: {
+      type: String,
+      required: false,
+    },
+    url: {
+      type: String,
+      required: false,
+    },
     required: false,
   },
   originalProfileImgPath: {

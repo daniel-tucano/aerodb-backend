@@ -6,7 +6,7 @@ pipeline {
             steps {
                 dir(path: './AeroNoSQL-backend') {
                     cache(maxCacheSize: 250, caches: [
-                        [$class: 'ArbitraryFileCache', excludes: '', includes: '**/*', path: '${HOME}/node_modules/.cache']
+                        [$class: 'ArbitraryFileCache', excludes: '', includes: '**/*', path: './node_modules/.cache']
                     ])
                 }
             }

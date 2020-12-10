@@ -2,6 +2,16 @@ pipeline {
     agent any
     stages {
 
+        stage('Adiciona os arquivos em cache') {
+            steps {
+                dir(path: './AeroNoSQL-backend') {
+                    cache(maxCacheSize: 250, caches: [
+                        [$class: 'ArbitraryFileCache', excludes: '', includes: '**/*', path: '${HOME}/node_modules/.cache']
+                    ])
+                }
+            }
+        }
+
         stage('Constroi a imagem da apĺicação no docker') {
             steps {
                 dir(path: './AeroNoSQL-backend')  {

@@ -5,9 +5,13 @@ pipeline {
         stage('Adiciona os arquivos em cache') {
             steps {
                 dir(path: './AeroNoSQL-backend') {
-                    cache(maxCacheSize: 250, caches: [
-                        [$class: 'ArbitraryFileCache', excludes: '', includes: '**/*', path: './node_modules/.cache']
-                    ])
+                    try {
+                        cache(maxCacheSize: 250, caches: [
+                            [$class: 'ArbitraryFileCache', excludes: '', includes: '**/*', path: './node_modules/.cache']
+                        ])
+                    } catch (err) {
+                        echo "Ocorreu o seguinte erro: ${err}"
+                    }
                 }
             }
         }

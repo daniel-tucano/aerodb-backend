@@ -43,4 +43,4 @@ const multerImg = (endName: string) => {
   return multerMiddleware;
 };
 
-export default multerProfileImg;
+export default multerImg;

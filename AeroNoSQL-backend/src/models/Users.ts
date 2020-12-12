@@ -8,6 +8,7 @@ export interface UserDataType extends Document {
   email: string;
   gender: string;
   yearOfBirth: Date;
+  joinDate: Date;
   institution?: string;
   about: string;
   socialNetworks: {
@@ -60,6 +61,10 @@ const UserMongoSchema = new mongoose.Schema({
     required: true,
   },
   yearOfBirth: {
+    type: Date,
+    required: true,
+  },
+  joinDate: {
     type: Date,
     required: true,
   },

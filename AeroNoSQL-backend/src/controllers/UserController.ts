@@ -35,7 +35,7 @@ module.exports = {
   },
 
   async store(req: Request, res: Response) {
-    const user = await User.create(req.body);
+    const user = await User.create({ ...req.body, joinDate: new Date() });
 
     return res.json(user);
   },

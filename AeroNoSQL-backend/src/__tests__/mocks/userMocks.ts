@@ -6,6 +6,7 @@ const baseUser = {
   email: "user@example.com'",
   gender: "male",
   yearOfBirth: new Date(1999, 2, 8, 0, 0, 0, 0),
+  joinDate: new Date(2020, 2, 8, 0, 0, 0),
   institution: "mock institution",
   about: "mock about",
   socialNetworks: {

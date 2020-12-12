@@ -50,10 +50,12 @@ describe("UserController tests", () => {
       .send(userMocks.user)
       .auth(JWTMocks.user_1, { type: "bearer" });
 
-    res.body.yearOfBirth = new Date(res.body.yearOfBirth);
-
     expect(res.status).toBe(200);
-    expect(res.body).toMatchObject(userMocks.user);
+    expect({
+      ...res.body,
+      yearOfBirth: new Date(res.body.yearOfBirth),
+      joinDate: new Date(2020, 2, 8, 0, 0, 0),
+    }).toMatchObject(userMocks.user);
   });
 
   it("Should delete user document", async () => {
@@ -98,10 +100,12 @@ describe("UserController tests", () => {
       .auth(JWTMocks.user_1, { type: "bearer" })
       .send(userMocks.updatedUser);
 
-    res.body.yearOfBirth = new Date(res.body.yearOfBirth);
-
     expect(res.status).toBe(200);
-    expect(res.body).toMatchObject(userMocks.updatedUser);
+    expect({
+      ...res.body,
+      yearOfBirth: new Date(res.body.yearOfBirth),
+      joinDate: new Date(2020, 2, 8, 0, 0, 0),
+    }).toMatchObject(userMocks.updatedUser);
   });
 
   it("Should not find user document to update", async () => {

@@ -29,6 +29,10 @@ const UserMongoSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  joinDate: {
+    type: Date,
+    required: true,
+  },
   institution: {
     type: String,
     required: false,

@@ -12,9 +12,11 @@ RUN apt install -y python3-pip
 
 RUN pip3 install --requirement=pip-packages.txt
 
-COPY . .
+COPY package.json .
 
 RUN npm install
+
+COPY . .
 
 RUN npx tsc
 

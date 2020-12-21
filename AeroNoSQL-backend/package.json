@@ -6,7 +6,7 @@
   "scripts": {
     "test:unit": "NODE_ENV=test_unit jest --runInBand --group=unit --silent --forceExit",
     "test:integration": "NODE_ENV=test_integration jest --runInBand --group=integration --silent --forceExit",
-    "test": "NODE_ENV=test_unit jest --runInBand --silent --group=unit --forceExit && NODE_ENV=test_integration jest --silent --group=integration --forceExit",
+    "test": "NODE_ENV=test_unit jest --runInBand --silent --group=unit --detectOpenHandles --forceExit && NODE_ENV=test_integration jest --silent --group=integration --detectOpenHandles --forceExit",
     "dev": "ts-node-dev --respawn --ignore-watch ./__tests__ --transpile-only ./server.ts",
     "start": "node build/server.js"
   },

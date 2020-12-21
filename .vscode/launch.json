@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "preLaunchTask": 		{
+              "type": "typescript",
+              "tsconfig": "AeroNoSQL-backend/tsconfig.json",
+              "problemMatcher": [
+                "$tsc"
+              ],
+              "group": "build",
+              "label": "tsc: build - AeroNoSQL-backend/tsconfig.json"
+            },
+            "cwd": "${workspaceFolder}/AeroNoSQL-backend",
+            "program": "${workspaceFolder}/AeroNoSQL-backend/server.ts",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "name": "Debug Jest Unit Tests",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/AeroNoSQL-backend",
+            "env": {"NODE_ENV": "test_unit"},
+            "runtimeArgs": [
+              "--inspect-brk",
+              "${workspaceRoot}/AeroNoSQL-backend/node_modules/.bin/jest",
+              "RunController",
+              "--detectOpenHandles",
+              "--runInBand",
+              "--group=unit"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "port": 9229
+          },
+          {
+            "name": "Debug Jest Integration Tests",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/AeroNoSQL-backend",
+            "env": {"NODE_ENV": "test_integration"},
+            "runtimeArgs": [
+              "--inspect-brk",
+              "${workspaceRoot}/AeroNoSQL-backend/node_modules/.bin/jest",
+              "--detectOpenHandles",
+              "--runInBand",
+              "--group=integration"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "port": 9229
+          }
+    ]
+}

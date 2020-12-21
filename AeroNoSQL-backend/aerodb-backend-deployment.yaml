@@ -50,7 +50,7 @@ spec:
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: ./firebase/aero-no-sql-dev-firebase-service-account-key.json
           - name: CORS_ORIGIN
-            value: "http://localhost:3000,https://aero-no-sql-dev.web.app/,https://aero-no-sql-dev.firebaseapp.com/"
+            value: "http://localhost:3000,https://aero-no-sql-dev.web.app,https://aero-no-sql-dev.firebaseapp.com,https://aero-db.com"
       volumes:
         - name: aerodb-backend-secret-files
           secret:

@@ -2,7 +2,18 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: aerodb-backend-nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "aerodb-backend-issuer"
 spec:
-  backend:
-    serviceName: aerodb-backend-nodeport
-    servicePort: 80
+  tls:
+    - secretName: aerodb-backend-tls-key
+      hosts: 
+        - backend.aero-db.com
+  rules:
+    - host: backend.aero-db.com
+      http:
+        paths:
+          -  backend:
+              serviceName: aerodb-backend-nodeport
+              servicePort: 80

@@ -8,7 +8,7 @@ pipeline {
                         [$class: 'ArbitraryFileCache', excludes: '', includes: '**/*', path: './node_modules/.cache']
                     ]]) {
                         script {
-                            def app = docker.build('daanrsantiago/aerodb-backend', '--no-cache -f Dockerfile .')
+                            def app = docker.build('daanrsantiago/aerodb-backend', '-f Dockerfile .')
                         }
                     }
                 }
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 dir(path: './AeroNoSQL-backend') {
                     script {
-                        def app = docker.build('daanrsantiago/aerodb-backend-test', '--no-cache -f Dockerfile.test .')
+                        def app = docker.build('daanrsantiago/aerodb-backend-test', '-f Dockerfile.test .')
                     }
                 }
             }

@@ -90,8 +90,6 @@ if request_args and 'airfoil' in request_args:
         if 'all' in runs :
             runs = airfoilData['runs']['runIDs']
 
-        print(runs)
-            
         os.mkdir('runs')
         os.chdir('runs')
         for run in runs:

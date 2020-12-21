@@ -7,6 +7,11 @@ const AirfoilsController = require("./controllers/AirfoilController");
 const RunController = require("./controllers/RunController");
 const UserController = require("./controllers/UserController");
 
+// Root route
+publicRoutes.get("/", (_req, res) => {
+  res.status(200).send("welcome to aerodb REST API!");
+});
+
 // Airfoil Public Routes
 publicRoutes.get("/airfoils", AirfoilsController.index);
 publicRoutes.get("/airfoils/:id", AirfoilsController.show);

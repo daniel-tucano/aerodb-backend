@@ -6,6 +6,7 @@ import bearerToken from "express-bearer-token";
 import publicRoutes from "./src/publicRoutes";
 import privateRoutes from "./src/privateRoutes";
 import verifyToken from "./src/functions/verifyToken";
+import cleanBodyFields from "./src/functions/cleanBodyFields";
 import addODataQuery from "./src/functions/addODataQuery";
 import admin from "firebase-admin";
 
@@ -113,6 +114,7 @@ export class AppController {
       cors({ origin: this.env.CORS_ORIGIN.split(","), credentials: true })
     );
     this.express.use(bearerToken());
+    this.express.use(cleanBodyFields);
     this.express.use(addODataQuery);
   }
 

@@ -39,6 +39,17 @@ describe('AirfoilController tests', () => {
         expect(res.body).toMatchObject(airfoilMocks.authorizedAirfoil)
     })
 
+    it('Should ignore _id field on insert an airfoil document', async () => {
+        // Inserting a document to have some already used _id
+        const insertedAirfoilRes = await request(app.express).post('/airfoils').auth(JWTMocks.user_1, { type: 'bearer' }).send(airfoilMocks.authorizedAirfoil)
+        // Inserting another airfoil document, but with the same _id
+        const res = await request(app.express).post('/airfoils').auth(JWTMocks.user_1, { type: 'bearer' }).send({ _id: insertedAirfoilRes.body._id ,...airfoilMocks.authorizedAirfoil})
+
+        // Usually it would not be possible and would raise an error. 
+        expect(res.status).toBe(200)
+        expect(res.body._id).not.toBe(insertedAirfoilRes.body._id)
+    })
+
     it('Should unauthorize to insert the airfoil document', async () => {
         const res = await request(app.express).post('/airfoils').send(airfoilMocks.unauthorizedAirfoil).auth(JWTMocks.user_1, { type: "bearer" })
 

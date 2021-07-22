@@ -2,7 +2,7 @@
 // ja existem estao demorando absurdos 18 segundos para fazer uma query que nao deveria demorar isso tudo
 // por algum motivo
 
-import { FilterQuery } from "mongoose";
+import { FilterQuery, QueryOptions } from "mongoose";
 import { Model } from "mongoose";
 
 interface PaginateOptions {
@@ -60,7 +60,7 @@ export const paginate = async (
 
   if (estimatedDocumentCount) {
     // console.time("tempo para contar quantos dumentos na busca");
-    paginationResult.totalDocs = await Model.estimatedDocumentCount(query);
+    paginationResult.totalDocs = await Model.estimatedDocumentCount(query as QueryOptions);
     // console.timeEnd("tempo para contar quantos dumentos na busca");
   } else {
     paginationResult.totalDocs = await Model.countDocuments(query);

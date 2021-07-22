@@ -31,7 +31,7 @@ sequelize.authenticate().then(() => {
 
 }).catch((error) => {
     console.error('Unable to connect to the database:', error);
-
+    throw "nao foi possível conectar ao banco de dados"
 })
 
 // Inserindo o usuário Daniel no banco de dados

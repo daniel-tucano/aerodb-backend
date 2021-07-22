@@ -111,7 +111,7 @@ export class AppController {
     this.express.use(express.json());
     this.express.use(cookieParser());
     this.express.use(
-      cors({ origin: this.env.CORS_ORIGIN.split(","), credentials: true })
+      cors({ origin: this.env.CORS_ORIGIN?.split(","), credentials: true })
     );
     this.express.use(bearerToken());
     this.express.use(cleanBodyFields);

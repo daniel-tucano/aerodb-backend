@@ -16,6 +16,6 @@
     "mongoose-function": "^0.1.0",
     "mysql2": "^2.2.5",
     "require-dir": "^1.2.0",
-    "sequelize": "^6.3.5"
+    "sequelize": "6.3.5"
   }
 }
